@@ -30,11 +30,15 @@ namespace Práctica_1
         static void Main(string[] args)
         {
             Tablero tab = new Tablero();    //Creamos el tablero
-            string file;
+            string file;                    //Ruta de acceso al nivel
 
-            Inicializa(out file);           //Creamos la ruta de acceso del tablero
+            Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
+            act.x = act.y = 0;
+            Coor ori;                       //Esquina origen del posible nuevo rectángulo
+            ori.x = -1;
 
-            LeeNivel(file, tab);
+            Inicializa(out file);           //Creamos la ruta de acceso del nivel
+            LeeNivel(file, tab);            //Leemos el nivel
 
         }
 
@@ -123,8 +127,8 @@ namespace Práctica_1
                         //Creamos un pilar
                         Pilar pil = new Pilar();
                         pil.val = int.Parse(pilares[i]);
-                        pil.coor.x = i;
-                        pil.coor.y = j;
+                        pil.coor.x = j;
+                        pil.coor.y = i;
 
                         //Guardamos el pilar en el array
                         tab.pils[k] = pil;
@@ -136,6 +140,37 @@ namespace Práctica_1
 
         }
         #endregion
+
+        static Rect NormalizaRect(Coor c1, Coor c2)
+        {
+            Rect r = new Rect();
+
+            //left - right
+            if (c1.x < c2.x)
+            {
+                r.lt.x = c1.x;
+                r.rb.x = c2.x;
+            }
+            else
+            {
+                r.lt.x = c2.x;
+                r.rb.x = c1.x;
+            }
+
+            //top - bottom
+            if (c1.y < c2.y)
+            {
+                r.lt.y = c1.y;
+                r.rb.y = c2.y;
+            }
+            else
+            {
+                r.lt.y = c2.y;
+                r.rb.y = c1.y;
+            }
+
+            return r;
+        }
 
         #endregion
 
