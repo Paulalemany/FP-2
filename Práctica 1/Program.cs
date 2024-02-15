@@ -141,7 +141,7 @@ namespace Práctica_1
         }
         #endregion
 
-        static Rect NormalizaRect(Coor c1, Coor c2)
+        Rect NormalizaRect(Coor c1, Coor c2)
         {
             Rect r = new Rect();
 
@@ -171,6 +171,27 @@ namespace Práctica_1
 
             return r;
         }
+
+        #region Renders
+        static void Render(Tablero tab, Coor act, Coor ori)
+        {
+
+        }
+
+        //Vamos a hacer un render por cada fase probablemente
+        void InterseccionesRender(Tablero tab) { }
+
+        void PilarRender(Tablero tab) { }
+
+        void RectanglesRender(Tablero tab) { }
+
+        void ActualRectangle(Tablero tab, Coor act, Coor ori) { }
+
+        void Debug(Coor act, Coor ori) { }
+
+        void Cursor(Coor act) { }
+        #endregion
+
 
         #endregion
 
