@@ -29,16 +29,18 @@ namespace Práctica_1
 
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero();    //Creamos el tablero
+            Tablero tab;
             string file;                    //Ruta de acceso al nivel
 
             Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
             act.x = act.y = 0;
             Coor ori;                       //Esquina origen del posible nuevo rectángulo
-            ori.x = -1;
+            ori.x = -1; ori.y = 0;
 
             Inicializa(out file);           //Creamos la ruta de acceso del nivel
-            LeeNivel(file, tab);            //Leemos el nivel
+            LeeNivel(file, out tab);            //Leemos el nivel
+
+            Render(tab, act, ori);          //Render inicial
 
         }
 
@@ -98,12 +100,13 @@ namespace Práctica_1
             file = "puzzles/puzzles/" + nivel + ".txt";
         }
 
-        static void LeeNivel(string file, Tablero tab)
+        static void LeeNivel(string file, out Tablero tab)
         {
             //Abrimos el archivo que se va a leer
             StreamReader sr = new StreamReader(file);
 
             //Creamos el tablero
+            tab = new Tablero();                        //Creamos el tablero
             tab.fils = int.Parse(sr.ReadLine());        //Filas del tablero
             tab.cols = int.Parse(sr.ReadLine());        //Columnas del tablero
 
@@ -175,21 +178,51 @@ namespace Práctica_1
         #region Renders
         static void Render(Tablero tab, Coor act, Coor ori)
         {
+            Console.Clear();
+            InterseccionesRender(tab);
+            PilarRender(tab);
+            RectanglesRender(tab);
+            ActualRectangle(tab, act, ori);
+            Cursor(act);
 
+            if (DEBUG) Debug(act, ori);
+            
         }
 
         //Vamos a hacer un render por cada fase probablemente
-        void InterseccionesRender(Tablero tab) { }
+        static void InterseccionesRender(Tablero tab) 
+        {
+            for(int i = 0; i < tab.fils; i++)       //Recorre las filas del tablero
+            {
+                for (int j = 0; j <= tab.cols; j++)  //Recorre las columnas del tablero
+                {
+                     Console.Write("+   ");
+                }
+                //Hacemos el salto de línea
+                Console.Write('\n');
 
-        void PilarRender(Tablero tab) { }
+          
+                
+                
 
-        void RectanglesRender(Tablero tab) { }
+                    Console.Write('\n');
+            }
+        }
 
-        void ActualRectangle(Tablero tab, Coor act, Coor ori) { }
+        static void PilarRender(Tablero tab) { }
 
-        void Debug(Coor act, Coor ori) { }
+        static void RectanglesRender(Tablero tab) { }
 
-        void Cursor(Coor act) { }
+        static void ActualRectangle(Tablero tab, Coor act, Coor ori) { }
+
+        static void Debug(Coor act, Coor ori) 
+        {
+            Console.WriteLine();        //Dejamos un poco de aire
+            //Rectángulos que llevamos
+            Console.WriteLine("Ori: ({0},{1})    Act: ({2},{3}) ", ori.x, ori.y, act.x, act.y);
+        }
+
+        static void Cursor(Coor act) { }
         #endregion
 
 
