@@ -1,4 +1,4 @@
-﻿//Paula <alemany Rodríguez
+﻿//Paula Alemany Rodríguez
 
 namespace Práctica_1
 {
