@@ -6,6 +6,8 @@ namespace Práctica_1
     {
 
         const bool DEBUG = true;
+        const int HUECO_Y = 4;
+        const int HUECO_X = 2;
 
         #region Structs
         struct Coor {   // coordenadas en el tablero  
@@ -98,6 +100,7 @@ namespace Práctica_1
             }
 
             file = "puzzles/puzzles/" + nivel + ".txt";
+            //file = "puzzles/puzzles/" + "000" + ".txt";
         }
 
         static void LeeNivel(string file, out Tablero tab)
@@ -192,24 +195,35 @@ namespace Práctica_1
         //Vamos a hacer un render por cada fase probablemente
         static void InterseccionesRender(Tablero tab) 
         {
-            for(int i = 0; i < tab.fils; i++)       //Recorre las filas del tablero
+            for(int i = 0; i <= tab.fils; i++)       //Recorre las filas del tablero
             {
                 for (int j = 0; j <= tab.cols; j++)  //Recorre las columnas del tablero
                 {
-                     Console.Write("+   ");
+                    //Se multiplica para que el tablero se quede de un buen tamaño
+                    Console.SetCursorPosition(j * HUECO_Y, i * HUECO_X);
+                    Console.Write("+");
                 }
                 //Hacemos el salto de línea
                 Console.Write('\n');
-
-          
-                
-                
-
-                    Console.Write('\n');
+                Console.Write('\n');
             }
         }
 
-        static void PilarRender(Tablero tab) { }
+        static void PilarRender(Tablero tab) 
+        {
+            for (int j = 0; j < tab.pils.Length; j++)   //Recorre los pilares del tablero
+            {
+                if (tab.pils[j].val != 0)
+                {
+                    //Se le suma para ponerlo en el centro
+                    Console.SetCursorPosition((tab.pils[j].coor.y * HUECO_Y) + 2, (tab.pils[j].coor.x * HUECO_X) + 1);
+                    Console.Write(tab.pils[j].val);
+                }
+
+                //El 0 lo ponen porque el array es más grande que el número de pilares (INTENTAR ARREGLAR)
+            }
+            Console.SetCursorPosition(0, tab.cols + tab.fils);
+        }
 
         static void RectanglesRender(Tablero tab) { }
 
