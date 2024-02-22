@@ -52,7 +52,7 @@ namespace Práctica_1
                 char c = ' ';
 
                 while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
-                ProcesaInput(c, tab, ref act, ori);
+                ProcesaInput(c, ref tab, ref act, ref ori);
                 Render(tab, act, ori);
             }
 
@@ -96,12 +96,29 @@ namespace Práctica_1
             return d;
         }
 
-        static void ProcesaInput(char ch, Tablero tab, ref Coor act, Coor ori)
+        static void ProcesaInput(char ch, ref Tablero tab, ref Coor act, ref Coor ori)
         {
             if (ch == 'l' && act.y > 0) { act.y--; }
             else if (ch == 'r' && act.y < tab.cols - 1) { act.y++; }
             else if (ch == 'u' && act.x > 0) { act.x--; }
             else if (ch == 'd' && act.x < tab.fils - 1) { act.x++; }
+            else if (ch == 'c')
+            {
+                //Si Ori no está marcado marcamos ori
+                if(ori.x == -1)
+                {
+                    //Comenzamos con el inserta
+                    ori = act;
+                }
+                //Si ya está marcao ori insertamos el rectángulo
+                else
+                {
+                    InsertaRect(ref tab, act, ori);
+                    ori.x = -1;
+                }
+                
+
+            }
 
         }
         #endregion
@@ -168,7 +185,7 @@ namespace Práctica_1
         }
         #endregion
 
-        Rect NormalizaRect(Coor c1, Coor c2)
+        static Rect NormalizaRect(Coor c1, Coor c2)
         {
             Rect r = new Rect();
 
@@ -205,16 +222,18 @@ namespace Práctica_1
             Console.Clear();
             InterseccionesRender(tab);
             PilarRender(tab);
-            RectanglesRender(tab);
+            for (int i = 0; i < tab.numRects; i++)
+            {
+                RectanglesRender(tab.rects[i]);
+            }
             ActualRectangle(tab, act, ori);
             Cursor(act);
 
             Console.SetCursorPosition(0, tab.cols + tab.fils);
-            if (DEBUG) Debug(act, ori);
+            if (DEBUG) Debug(tab, act, ori);
             
         }
 
-        //Vamos a hacer un render por cada fase probablemente
         static void InterseccionesRender(Tablero tab) 
         {
             for(int i = 0; i <= tab.fils; i++)       //Recorre las filas del tablero
@@ -247,13 +266,31 @@ namespace Práctica_1
            
         }
 
-        static void RectanglesRender(Tablero tab) { }
+        static void RectanglesRender(Rect r) 
+        {
+            
+
+            //dibujamos la horizontal
+            for (int i = r.lt.y; i <= r.rb.y; i++)
+            {
+                //Nos colocamos en su lt
+                Console.SetCursorPosition(r.lt.y + i, r.lt.x);
+                Console.Write("---");
+            }
+        }
 
         static void ActualRectangle(Tablero tab, Coor act, Coor ori) { }
 
-        static void Debug(Coor act, Coor ori) 
+        static void Debug(Tablero tab, Coor act, Coor ori) 
         {
             Console.WriteLine();        //Dejamos un poco de aire
+
+            Console.Write("Rects: ");
+            for (int i = 0; i < tab.numRects; i++)
+            {
+                Console.Write(" ({0},{0})-({2},{3}) ", tab.rects[i].lt.x, tab.rects[i].lt.y, tab.rects[i].rb.x, tab.rects[i].rb.y);
+            }
+            Console.WriteLine();
             //Rectángulos que llevamos
             Console.WriteLine("Ori: ({0},{1})    Act: ({2},{3}) ", ori.x, ori.y, act.x, act.y);
         }
@@ -267,7 +304,81 @@ namespace Práctica_1
         }
         #endregion
 
-        
+        #region Rectangulos
+        static bool Dentro(Coor c, Rect r)
+        {
+            bool d = false;
+
+            if (r.lt.y <= c.y && c.y <= r.rb.y)     //Coincide la primera coordenada 
+            {
+                if(r.lt.x <= c.x && c.x <= r.rb.x)  //Está la segunda coordenada también dentro
+                {
+                    d = true;
+                }
+            }
+            return d;
+        }
+
+        static bool InterSect(Rect r1, Rect r2)
+        {
+            bool inter = false;
+
+            //Comparamos la primera coordenada (y)
+            if(Dentro(r1.lt, r2) || Dentro (r2.lt, r1))
+            {
+                //Si alguna de las dos está comparamos la otra
+                if(Dentro(r1.rb, r2) || Dentro(r2.rb, r1))
+                { inter = true; }
+            }
+            
+            return inter;
+        }
+
+        static void InsertaRect(ref Tablero tab, Coor c1, Coor c2)  //No se si habrá que pasar el tablero por algo al estar modificando num
+        {
+            Rect r = NormalizaRect(c1, c2);
+
+            //Comprobamos que el rectángulo no solape a ninguno de los ya existentes
+            int i = 0;
+            while(i < tab.numRects)
+            {
+                InterSect(r, tab.rects[i]);
+                i++;
+            }
+
+            //Si llega al final es que no solapa a ninguno
+            if(i == tab.numRects)
+            {
+                tab.rects[tab.numRects] = r;
+                tab.numRects++;
+            }
+           
+        }
+
+        static bool EliminaRect(Tablero tab, Coor c)
+        {
+            bool e = false;
+
+            //Buscamos en el tablero si algún rectángulo tiene la coordenada
+            int i = 0;
+            while (i < tab.numRects && !Dentro(c, tab.rects[i])) { i++; }
+
+            //Si no llega al final es que hay que eliminar
+            if (i < tab.numRects)
+            {
+                //Eliminamos el rect
+                for (int j = i; j < tab.numRects - 1; j++)
+                {
+                    tab.rects[j] = tab.rects[j+1];
+                }
+
+                e = true;
+                tab.numRects--;
+            }
+
+            return e;
+        }
+        #endregion
 
         #endregion
 
