@@ -31,6 +31,8 @@ namespace Práctica_1
 
         static void Main(string[] args)
         {
+            bool play = true;
+
             Tablero tab;
             string file;                    //Ruta de acceso al nivel
 
@@ -40,9 +42,19 @@ namespace Práctica_1
             ori.x = -1; ori.y = 0;
 
             Inicializa(out file);           //Creamos la ruta de acceso del nivel
-            LeeNivel(file, out tab);            //Leemos el nivel
+            LeeNivel(file, out tab);        //Leemos el nivel
 
             Render(tab, act, ori);          //Render inicial
+
+            //Bucle principal del juego
+            while (play)
+            {
+                char c = ' ';
+
+                while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
+                ProcesaInput(c, tab, ref act, ori);
+                Render(tab, act, ori);
+            }
 
         }
 
@@ -82,6 +94,15 @@ namespace Práctica_1
                 }
             }
             return d;
+        }
+
+        static void ProcesaInput(char ch, Tablero tab, ref Coor act, Coor ori)
+        {
+            if (ch == 'l' && act.y > 0) { act.y--; }
+            else if (ch == 'r' && act.y < tab.cols - 1) { act.y++; }
+            else if (ch == 'u' && act.x > 0) { act.x--; }
+            else if (ch == 'd' && act.x < tab.fils - 1) { act.x++; }
+
         }
         #endregion
 
@@ -188,6 +209,7 @@ namespace Práctica_1
             ActualRectangle(tab, act, ori);
             Cursor(act);
 
+            Console.SetCursorPosition(0, tab.cols + tab.fils);
             if (DEBUG) Debug(act, ori);
             
         }
@@ -222,7 +244,7 @@ namespace Práctica_1
 
                 //El 0 lo ponen porque el array es más grande que el número de pilares (INTENTAR ARREGLAR)
             }
-            Console.SetCursorPosition(0, tab.cols + tab.fils);
+           
         }
 
         static void RectanglesRender(Tablero tab) { }
@@ -236,9 +258,16 @@ namespace Práctica_1
             Console.WriteLine("Ori: ({0},{1})    Act: ({2},{3}) ", ori.x, ori.y, act.x, act.y);
         }
 
-        static void Cursor(Coor act) { }
+        static void Cursor(Coor act) 
+        {
+            Console.SetCursorPosition(act.y * HUECO_Y + 2, act.x * HUECO_X + 1);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.Write(" ");
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
         #endregion
 
+        
 
         #endregion
 
