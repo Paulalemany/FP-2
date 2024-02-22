@@ -274,7 +274,10 @@ namespace Práctica_1
             for (int i = r.lt.y; i <= r.rb.y; i++)
             {
                 //Nos colocamos en su lt
-                Console.SetCursorPosition(r.lt.y + i, r.lt.x);
+                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x);
+                Console.Write("---");
+                //Nos colocamos en su lt
+                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X + 2);
                 Console.Write("---");
             }
         }
