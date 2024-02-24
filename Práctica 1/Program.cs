@@ -334,27 +334,53 @@ namespace Práctica_1
 
             if (r.lt.y <= c.y && c.y <= r.rb.y)     //Coincide la primera coordenada 
             {
-                if(r.lt.x <= c.x && c.x <= r.rb.x)  //Está la segunda coordenada también dentro
+                if (r.lt.x <= c.x && c.x <= r.rb.x)  //Está la segunda coordenada también dentro
                 {
                     d = true;
                 }
             }
+
             return d;
         }
 
         static bool InterSect(Rect r1, Rect r2)
         {
             bool inter = false;
+            int rb;
+            int ig;
+            Coor c;
 
-            
-            //Queremos comparar todas las coordenadas 
-            //Comparamos los extremos
-            if(Dentro(r1.lt, r2) || Dentro (r1.rb, r2))
+            //Queremos comparar todas las coordenadas y ahora mismo solo comprueba la primera y la ultima
+
+            //Vamos a recorrer cada coordenada del r1 y que lo compare con el r2
+            //Vemos en que dirección va el rect
+            if (r1.lt.x == r1.rb.x)
             {
-                //Si alguna de las dos está comparamos la otra
-                //if(Dentro(r1.rb, r2) || Dentro(r2.rb, r1))
-                { inter = true; }
+                c.x = r1.lt.x;
+                c.y = r1.lt.y;
+                rb = r1.rb.y;
+
+                while (c.y <= rb && !Dentro(c, r2))
+                {
+                    c.y++;
+                }
+                ig = c.y;
             }
+            else
+            {
+                c.y = r1.lt.y;
+                c.x = r1.lt.x ;
+                rb = r1.rb.x;
+
+                while (c.x <= rb && !Dentro(c, r2))
+                {
+                    c.x++;
+                }
+
+                ig = c.x;
+            }
+
+            if (ig <= rb) inter = true;
             
             return inter;
         }
