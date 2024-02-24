@@ -110,14 +110,12 @@ namespace Práctica_1
                     //Comenzamos con el inserta
                     ori = act;
                 }
-                //Si ya está marcao ori insertamos el rectángulo
+                //Si ya está marcado ori insertamos el rectángulo
                 else
                 {
                     InsertaRect(ref tab, act, ori);
                     ori.x = -1;
                 }
-                
-
             }
 
         }
@@ -224,7 +222,7 @@ namespace Práctica_1
             PilarRender(tab);
             for (int i = 0; i < tab.numRects; i++)
             {
-                RectanglesRender(tab.rects[i]);
+                RenderRect(tab.rects[i]);
             }
             ActualRectangle(tab, act, ori);
             Cursor(act);
@@ -266,23 +264,45 @@ namespace Práctica_1
            
         }
 
-        static void RectanglesRender(Rect r) 
+        static void RenderRect(Rect r) 
         {
             
-
-            //dibujamos la horizontal
+            //Dibujamos la horizontal
             for (int i = r.lt.y; i <= r.rb.y; i++)
             {
                 //Nos colocamos en su lt
-                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x);
+                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X);
                 Console.Write("---");
+                Console.SetCursorPosition(i * HUECO_Y + 1, r.rb.x * HUECO_X + 2);
+                Console.Write("---");
+            }
+
+            //Dibujamos la vertical
+            for (int i = r.lt.x; i <= r.rb.x; i++)
+            {
                 //Nos colocamos en su lt
-                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X + 2);
-                Console.Write("---");
+                Console.SetCursorPosition(r.lt.y * HUECO_Y , i * HUECO_X + 1 );
+                Console.Write("|");
+                Console.SetCursorPosition(r.rb.y * HUECO_Y + HUECO_Y , i * HUECO_X + 1);
+                Console.Write("|");
             }
         }
 
-        static void ActualRectangle(Tablero tab, Coor act, Coor ori) { }
+        static void ActualRectangle(Tablero tab, Coor act, Coor ori) 
+        {
+            //Estamos creando un rectángulo
+            if (ori.x != -1)
+            {
+                //Creamos un rect normalizado entre act y ori
+                Rect r = NormalizaRect(ori, act);
+                //Llamamos al render rect (Pintando en verde)
+                Console.ForegroundColor = ConsoleColor.Green;
+                RenderRect(r);
+
+                //Devolvemos a su color las cosas
+                Console.ForegroundColor= ConsoleColor.White;
+            }
+        }
 
         static void Debug(Tablero tab, Coor act, Coor ori) 
         {
@@ -291,7 +311,7 @@ namespace Práctica_1
             Console.Write("Rects: ");
             for (int i = 0; i < tab.numRects; i++)
             {
-                Console.Write(" ({0},{0})-({2},{3}) ", tab.rects[i].lt.x, tab.rects[i].lt.y, tab.rects[i].rb.x, tab.rects[i].rb.y);
+                Console.Write(" ({0},{1})-({2},{3}) ", tab.rects[i].lt.x, tab.rects[i].lt.y, tab.rects[i].rb.x, tab.rects[i].rb.y);
             }
             Console.WriteLine();
             //Rectángulos que llevamos
@@ -326,11 +346,13 @@ namespace Práctica_1
         {
             bool inter = false;
 
-            //Comparamos la primera coordenada (y)
-            if(Dentro(r1.lt, r2) || Dentro (r2.lt, r1))
+            
+            //Queremos comparar todas las coordenadas 
+            //Comparamos los extremos
+            if(Dentro(r1.lt, r2) || Dentro (r1.rb, r2))
             {
                 //Si alguna de las dos está comparamos la otra
-                if(Dentro(r1.rb, r2) || Dentro(r2.rb, r1))
+                //if(Dentro(r1.rb, r2) || Dentro(r2.rb, r1))
                 { inter = true; }
             }
             
@@ -343,11 +365,7 @@ namespace Práctica_1
 
             //Comprobamos que el rectángulo no solape a ninguno de los ya existentes
             int i = 0;
-            while(i < tab.numRects)
-            {
-                InterSect(r, tab.rects[i]);
-                i++;
-            }
+            while(i < tab.numRects && !InterSect(r, tab.rects[i])) { i++; }
 
             //Si llega al final es que no solapa a ninguno
             if(i == tab.numRects)
