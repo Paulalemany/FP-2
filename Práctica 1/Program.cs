@@ -105,7 +105,8 @@ namespace Práctica_1
             else if (ch == 'c')
             {
                 //Si Ori no está marcado marcamos ori
-                if(ori.x == -1)
+                if (EliminaRect(ref tab, act)) { }
+                else if (ori.x == -1)
                 {
                     //Comenzamos con el inserta
                     ori = act;
@@ -224,7 +225,7 @@ namespace Práctica_1
             {
                 RenderRect(tab.rects[i]);
             }
-            ActualRectangle(tab, act, ori);
+            ActualRectangle(act, ori);
             Cursor(act);
 
             Console.SetCursorPosition(0, tab.cols + tab.fils);
@@ -288,7 +289,7 @@ namespace Práctica_1
             }
         }
 
-        static void ActualRectangle(Tablero tab, Coor act, Coor ori) 
+        static void ActualRectangle(Coor act, Coor ori) 
         {
             //Estamos creando un rectángulo
             if (ori.x != -1)
@@ -330,17 +331,7 @@ namespace Práctica_1
         #region Rectangulos
         static bool Dentro(Coor c, Rect r)
         {
-            bool d = false;
-
-            if (r.lt.y <= c.y && c.y <= r.rb.y)     //Coincide la primera coordenada 
-            {
-                if (r.lt.x <= c.x && c.x <= r.rb.x)  //Está la segunda coordenada también dentro
-                {
-                    d = true;
-                }
-            }
-
-            return d;
+            return r.lt.y <= c.y && c.y <= r.rb.y && r.lt.x <= c.x && c.x <= r.rb.x;
         }
 
         static bool InterSect(Rect r1, Rect r2)
@@ -398,7 +389,7 @@ namespace Práctica_1
            
         }
 
-        static bool EliminaRect(Tablero tab, Coor c)
+        static bool EliminaRect(ref Tablero tab, Coor c)
         {
             bool e = false;
 
@@ -410,7 +401,7 @@ namespace Práctica_1
             if (i < tab.numRects)
             {
                 //Eliminamos el rect
-                for (int j = i; j < tab.numRects - 1; j++)
+                for (int j = i; j < tab.numRects; j++)
                 {
                     tab.rects[j] = tab.rects[j+1];
                 }
