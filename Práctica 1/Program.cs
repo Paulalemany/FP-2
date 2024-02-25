@@ -345,44 +345,40 @@ namespace Práctica_1
 
         static bool InterSect(Rect r1, Rect r2)
         {
-            bool inter = false;
             int rb;
             int ig;
             Coor c;
 
-            //Queremos comparar todas las coordenadas y ahora mismo solo comprueba la primera y la ultima
-
-            //Vamos a recorrer cada coordenada del r1 y que lo compare con el r2
             //Vemos en que dirección va el rect
-            if (r1.lt.x == r1.rb.x)
+            if (r1.lt.x == r1.rb.x)     //Va en horizontal
             {
-                c.x = r1.lt.x;
-                c.y = r1.lt.y;
-                rb = r1.rb.y;
+                c.x = r1.lt.x;  //La coordenada x no cambia es la fija
+                c.y = r1.lt.y;  //La coordenada y es la que va aumentando 
+                rb = r1.rb.y;   //Máx de la coordenada y
 
+                //Vamos comprobando si está dentro de r2 cada coordenada de r1
                 while (c.y <= rb && !Dentro(c, r2))
                 {
                     c.y++;
                 }
-                ig = c.y;
+                ig = c.y;   //Guardamos el resultado de la búsqueda
             }
-            else
+            else    //Va en vertical
             {
-                c.y = r1.lt.y;
-                c.x = r1.lt.x ;
-                rb = r1.rb.x;
+                c.y = r1.lt.y;  //La coordenada y no cambia es la fija
+                c.x = r1.lt.x ; //La coordenada x es la que va aumentando
+                rb = r1.rb.x;   //Máx de la coordenada x
 
+                //Vamos comprobando si está dentro de r2 cada coordenada de r1 
                 while (c.x <= rb && !Dentro(c, r2))
                 {
                     c.x++;
                 }
 
-                ig = c.x;
+                ig = c.x; //Guardamos el resultado de la búsqueda
             }
-
-            if (ig <= rb) inter = true;
             
-            return inter;
+            return ig <= rb;    //Si se ha encontrado alguna menor o igual al máximo del rect es que hay intersección
         }
 
         static void InsertaRect(ref Tablero tab, Coor c1, Coor c2)  //No se si habrá que pasar el tablero por algo al estar modificando num
