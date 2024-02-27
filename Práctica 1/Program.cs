@@ -31,27 +31,12 @@ namespace Práctica_1
 
         static void Main(string[] args)
         {
-            Tablero tab;
             string file;                    //Ruta de acceso al nivel
 
-            Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
-            act.x = act.y = 0;
-            Coor ori;                       //Esquina origen del posible nuevo rectángulo
-            ori.x = -1; ori.y = 0;
-
             Inicializa(out file);           //Creamos la ruta de acceso del nivel
-            LeeNivel(file, out tab);        //Leemos el nivel
-
-            Render(tab, act, ori);          //Render inicial
-
-            //Bucle principal del juego
-            while (!FinJuego(tab))
+            while(JuegaNivel(file))         //Mientras queramos seguir jugando
             {
-                char c = ' ';
-
-                while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
-                ProcesaInput(c, ref tab, ref act, ref ori);
-                Render(tab, act, ori);
+                Inicializa(out file);       //Cargamos el nuevo nivel
             }
 
         }
@@ -125,6 +110,7 @@ namespace Práctica_1
         static void Inicializa(out string file)
         {
             //Incicializamos el nivel
+            Console.Clear();
             Console.WriteLine("Escriba el número del nivel que desea jugar ");      //Tal vez sea mejor sacar esta línea y dejar el método mudo
             string nivel = Console.ReadLine();
             char[] cadena = nivel.ToCharArray();
@@ -147,7 +133,7 @@ namespace Práctica_1
             tab.fils = int.Parse(sr.ReadLine());        //Filas del tablero
             tab.cols = int.Parse(sr.ReadLine());        //Columnas del tablero
 
-            tab.pils = new Pilar[tab.cols * tab.fils];  //inicialización del array -> EN EL ENUNCIADO PONE QUE DEBE TENER UNA COMPONENTE POR PILAR <-
+            Pilar[] aux = new Pilar[tab.cols * tab.fils];   //Array auxiliar para los pilares
             tab.rects = new Rect[tab.cols * tab.fils];  //Inicialización array de rectángulos
 
             int j = 0;      //Contador de filas
@@ -171,12 +157,17 @@ namespace Práctica_1
                         pil.coor.y = i;
 
                         //Guardamos el pilar en el array
-                        tab.pils[k] = pil;
+                        aux[k] = pil;
                         k++;
                     }
                 }
                 j++;
             }
+
+            //Creamos el verdadero array de pilares con la longitud de K
+            tab.pils = new Pilar[k];  //inicialización del array
+            //Rellenamos con el auxiliar
+            for (int i = 0; i < tab.pils.Length; i++) { tab.pils[i] = aux[i]; }
 
         }
         #endregion
@@ -217,11 +208,12 @@ namespace Práctica_1
         {
             Console.Clear();
             InterseccionesRender(tab);
-            PilarRender(tab);
+            
             for (int i = 0; i < tab.numRects; i++)
             {
                 RenderRect(tab.rects[i]);
             }
+            PilarRender(tab);
             ActualRectangle(act, ori);
             Cursor(act);
 
@@ -256,23 +248,26 @@ namespace Práctica_1
                     Console.SetCursorPosition((tab.pils[j].coor.y * HUECO_Y) + 2, (tab.pils[j].coor.x * HUECO_X) + 1);
                     Console.Write(tab.pils[j].val);
                 }
-
-                //El 0 lo ponen porque el array es más grande que el número de pilares (INTENTAR ARREGLAR)
             }
            
         }
 
         static void RenderRect(Rect r) 
         {
-            
             //Dibujamos la horizontal
             for (int i = r.lt.y; i <= r.rb.y; i++)
             {
+                
                 //Nos colocamos en su lt
                 Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X);
                 Console.Write("---");
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X + 1);
+                Console.Write("    ");
+                Console.BackgroundColor = ConsoleColor.Black;
                 Console.SetCursorPosition(i * HUECO_Y + 1, r.rb.x * HUECO_X + 2);
                 Console.Write("---");
+                
             }
 
             //Dibujamos la vertical
@@ -281,9 +276,15 @@ namespace Práctica_1
                 //Nos colocamos en su lt
                 Console.SetCursorPosition(r.lt.y * HUECO_Y , i * HUECO_X + 1 );
                 Console.Write("|");
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(r.lt.y * HUECO_Y + 1, i * HUECO_X + 1);
+                Console.Write("    ");
+                Console.BackgroundColor = ConsoleColor.Black;
                 Console.SetCursorPosition(r.rb.y * HUECO_Y + HUECO_Y , i * HUECO_X + 1);
                 Console.Write("|");
             }
+
+            
         }
 
         static void ActualRectangle(Coor act, Coor ori) 
@@ -413,55 +414,25 @@ namespace Práctica_1
 
         static int AreaRect(Rect r)
         {
-            int a = 0;
-            //Vemos en que dirección va el rect
-            if (r.lt.x == r.rb.x)     //Va en horizontal
-            {
-                for (int i = r.lt.y; i < r.rb.y; i++) { a++; }
-            }
-            else    //Va en vertical
-            {
-                for (int i = r.lt.x; i < r.rb.x; i++) { a++; }
-            }
-            return a;
+            int s;
+            int a = 1;
+            int h = 1;
+
+            for (int i = r.lt.y; i < r.rb.y; i++) { a++; }      //Sumamos el ancho
+            for (int i = r.lt.x; i < r.rb.x; i++) { h++; }      //Sumamos el alto
+            s = a * h;      //Calculamos el área
+            return s;
         }
 
         static bool CheckRect(Rect r, Pilar[] p)
         {
             bool b = false;
             int i = 0;
-            int pilar;
-            int fin;
 
-            //Busca un pilar en el array de pilares que esté dentro de r
-            //Vemos en que dirección va el rect
+            while (i < p.Length && !Dentro(p[i].coor, r)) i++;
 
-            if (r.lt.x == r.rb.x)     //Va en horizontal
-            {
-                //Buscamos si hay algún pilar en la fila del rect
-                
-                while (p[i].coor.x < r.rb.x) { i++; }
-
-                pilar = p[i].coor.x;
-                fin = r.rb.x;
-            }
-            else    //Va en vertical
-            {
-                //Buscamos si hay algún pilar en la columna del rect
-                while (p[i].coor.y < r.rb.y) { i++; }
-
-                pilar = p[i].coor.y;
-                fin = r.rb.y;
-            }
-
-            //Si llega a ser igual hemos encontrado un pilar en la fila/Columna
-            if (pilar == fin)
-            {   //Comprobamos si el pilar i está dentro de r
-                if (Dentro(p[i].coor, r))   //Si está dentro comprobamos si el área coincide
-                {
-                    if (AreaRect(r) == p[i].val) { b = true; }  //Si el área coincide es que está bien
-                }
-            }
+            //Si no ha llegado al final es que ha encontrado uno
+            if (i != p.Length && AreaRect(r) == p[i].val) b = true;
 
             return b;
         }
@@ -473,37 +444,44 @@ namespace Práctica_1
             //Recorre los rectángulos que hay en el tablero y hace el check, si llega al final es que el tablero está completos
             int i = 0;
             //No estoy segura de si esto sería el lenght pero ahora testearé
-            while (i < tab.rects.Length && CheckRect(tab.rects[i], tab.pils)) i++;
-
-            //Si llega al final significa que el juego se ha finalizado correctamente
-            if (i == tab.rects.Length) { fin = true; }
+            if (tab.numRects == tab.pils.Length)
+            {
+                while (i < tab.pils.Length && CheckRect(tab.rects[i], tab.pils)) i++;
+                //Si llega al final significa que el juego se ha finalizado correctamente
+                if (i == tab.pils.Length) { fin = true; }
+            }
+           
             return fin;
         }
 
-        //static bool JuegaNivel(String file)
-        //{
-        //    Tablero tab;
+        static bool JuegaNivel(String file)
+        {
+            Tablero tab;
+            bool nivel = false;
+            bool exit = false;
 
-        //    Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
-        //    act.x = act.y = 0;
-        //    Coor ori;                       //Esquina origen del posible nuevo rectángulo
-        //    ori.x = -1; ori.y = 0;
+            Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
+            act.x = act.y = 0;
+            Coor ori;                       //Esquina origen del posible nuevo rectángulo
+            ori.x = -1; ori.y = 0;
 
-        //    LeeNivel(file, out tab);        //Leemos el nivel
+            LeeNivel(file, out tab);        //Leemos el nivel
 
-        //    Render(tab, act, ori);          //Render inicial
+            Render(tab, act, ori);          //Render inicial
 
-        //    //Bucle principal del juego
-        //    while (!FinJuego(tab))
-        //    {
-        //        char c = ' ';
+            //Bucle principal del juego
+            while (!nivel && !exit)
+            {
+                char c = ' ';
 
-        //        while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
-        //        ProcesaInput(c, ref tab, ref act, ref ori);
-        //        Render(tab, act, ori);
-        //    }
-
-        //}
+                while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
+                ProcesaInput(c, ref tab, ref act, ref ori);
+                Render(tab, act, ori);
+                nivel = FinJuego(tab);
+            }
+            if (exit) { return false; }
+            else { return true; }
+        }
 
         #endregion
 
