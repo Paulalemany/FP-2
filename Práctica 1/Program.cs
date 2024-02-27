@@ -31,8 +31,6 @@ namespace Práctica_1
 
         static void Main(string[] args)
         {
-            bool play = true;
-
             Tablero tab;
             string file;                    //Ruta de acceso al nivel
 
@@ -47,7 +45,7 @@ namespace Práctica_1
             Render(tab, act, ori);          //Render inicial
 
             //Bucle principal del juego
-            while (play)
+            while (!FinJuego(tab))
             {
                 char c = ' ';
 
@@ -137,7 +135,6 @@ namespace Práctica_1
             }
 
             file = "puzzles/puzzles/" + nivel + ".txt";
-            //file = "puzzles/puzzles/" + "000" + ".txt";
         }
 
         static void LeeNivel(string file, out Tablero tab)
@@ -401,7 +398,7 @@ namespace Práctica_1
             if (i < tab.numRects)
             {
                 //Eliminamos el rect
-                for (int j = i; j < tab.numRects; j++)
+                for (int j = i; j < tab.numRects - 1; j++)
                 {
                     tab.rects[j] = tab.rects[j+1];
                 }
@@ -413,6 +410,100 @@ namespace Práctica_1
             return e;
         }
         #endregion
+
+        static int AreaRect(Rect r)
+        {
+            int a = 0;
+            //Vemos en que dirección va el rect
+            if (r.lt.x == r.rb.x)     //Va en horizontal
+            {
+                for (int i = r.lt.y; i < r.rb.y; i++) { a++; }
+            }
+            else    //Va en vertical
+            {
+                for (int i = r.lt.x; i < r.rb.x; i++) { a++; }
+            }
+            return a;
+        }
+
+        static bool CheckRect(Rect r, Pilar[] p)
+        {
+            bool b = false;
+            int i = 0;
+            int pilar;
+            int fin;
+
+            //Busca un pilar en el array de pilares que esté dentro de r
+            //Vemos en que dirección va el rect
+
+            if (r.lt.x == r.rb.x)     //Va en horizontal
+            {
+                //Buscamos si hay algún pilar en la fila del rect
+                
+                while (p[i].coor.x < r.rb.x) { i++; }
+
+                pilar = p[i].coor.x;
+                fin = r.rb.x;
+            }
+            else    //Va en vertical
+            {
+                //Buscamos si hay algún pilar en la columna del rect
+                while (p[i].coor.y < r.rb.y) { i++; }
+
+                pilar = p[i].coor.y;
+                fin = r.rb.y;
+            }
+
+            //Si llega a ser igual hemos encontrado un pilar en la fila/Columna
+            if (pilar == fin)
+            {   //Comprobamos si el pilar i está dentro de r
+                if (Dentro(p[i].coor, r))   //Si está dentro comprobamos si el área coincide
+                {
+                    if (AreaRect(r) == p[i].val) { b = true; }  //Si el área coincide es que está bien
+                }
+            }
+
+            return b;
+        }
+
+        static bool FinJuego(Tablero tab)
+        {
+            bool fin = false;
+
+            //Recorre los rectángulos que hay en el tablero y hace el check, si llega al final es que el tablero está completos
+            int i = 0;
+            //No estoy segura de si esto sería el lenght pero ahora testearé
+            while (i < tab.rects.Length && CheckRect(tab.rects[i], tab.pils)) i++;
+
+            //Si llega al final significa que el juego se ha finalizado correctamente
+            if (i == tab.rects.Length) { fin = true; }
+            return fin;
+        }
+
+        //static bool JuegaNivel(String file)
+        //{
+        //    Tablero tab;
+
+        //    Coor act;                       //Pos actual del cursor -> Se puede inicializar en (0,0) <-
+        //    act.x = act.y = 0;
+        //    Coor ori;                       //Esquina origen del posible nuevo rectángulo
+        //    ori.x = -1; ori.y = 0;
+
+        //    LeeNivel(file, out tab);        //Leemos el nivel
+
+        //    Render(tab, act, ori);          //Render inicial
+
+        //    //Bucle principal del juego
+        //    while (!FinJuego(tab))
+        //    {
+        //        char c = ' ';
+
+        //        while (c == ' ') { c = leeInput(); }    //Simplemente no actuamos hasta que el jugador haga algo
+        //        ProcesaInput(c, ref tab, ref act, ref ori);
+        //        Render(tab, act, ori);
+        //    }
+
+        //}
 
         #endregion
 
