@@ -44,7 +44,7 @@ namespace Hoja3_1
 
             //Multiplicamos como si fuese por un paréntesis
             
-            num.real = (num1.real * num2.real) + -1 *(num1.img * num2.img);
+            num.real = (num1.real * num2.real) - (num1.img * num2.img);
             num.img = (num1.real * num2.img) + (num1.img * num2.real);
             return num;
         }
@@ -56,7 +56,8 @@ namespace Hoja3_1
         }
 
         public static bool operator !=(Complejo num1, Complejo num2)
-        {
+        {   
+            //return !()
             return (num1.real != num2.real) || (num1.img != num2.img);
         }
 
