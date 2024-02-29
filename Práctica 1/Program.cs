@@ -261,10 +261,11 @@ namespace Práctica_1
                 //Nos colocamos en su lt
                 Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X);
                 Console.Write("---");
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X + 1);
-                Console.Write("    ");
-                Console.BackgroundColor = ConsoleColor.Black;
+                //Intento de colorear
+                //Console.BackgroundColor = ConsoleColor.Green;
+                //Console.SetCursorPosition(i * HUECO_Y + 1, r.lt.x * HUECO_X + 1);
+                //Console.Write("    ");
+                //Console.BackgroundColor = ConsoleColor.Black;
                 Console.SetCursorPosition(i * HUECO_Y + 1, r.rb.x * HUECO_X + 2);
                 Console.Write("---");
                 
@@ -276,10 +277,10 @@ namespace Práctica_1
                 //Nos colocamos en su lt
                 Console.SetCursorPosition(r.lt.y * HUECO_Y , i * HUECO_X + 1 );
                 Console.Write("|");
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.SetCursorPosition(r.lt.y * HUECO_Y + 1, i * HUECO_X + 1);
-                Console.Write("    ");
-                Console.BackgroundColor = ConsoleColor.Black;
+                //Console.BackgroundColor = ConsoleColor.Green;
+                //Console.SetCursorPosition(r.lt.y * HUECO_Y + 1, i * HUECO_X + 1);
+                //Console.Write("    ");
+                //Console.BackgroundColor = ConsoleColor.Black;
                 Console.SetCursorPosition(r.rb.y * HUECO_Y + HUECO_Y , i * HUECO_X + 1);
                 Console.Write("|");
             }
