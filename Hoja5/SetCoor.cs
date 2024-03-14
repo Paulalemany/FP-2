@@ -74,9 +74,14 @@ class SetCoor{
   } 
  
   public override string ToString() // conversión a string
-  { 
+  {
         //Pasamos los números a string
-        return " "; 
+        string cadena = " ";
+        for (int i = 0; i < oc; i++)
+        {
+            cadena += coors[i].ToString;
+        }
+        return cadena; 
   } 
    
 }
