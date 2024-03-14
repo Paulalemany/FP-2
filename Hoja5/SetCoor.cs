@@ -25,8 +25,8 @@ class SetCoor{
 
   public bool Add(Coor c) // añadir elto al conjunto
   {
-        bool Add = true;
-        if (SearchElem(c) != -1) { Add = false; }   //Si la coordenada está no se hace nada
+        bool add = true;
+        if (SearchElem(c) != -1) { add = false; }   //Si la coordenada está no se hace nada
         else
         {
             //Comprobamos si hay espacio en el array
@@ -38,12 +38,30 @@ class SetCoor{
             }
         }
 
-        return Add; 
+        return add; 
   } 
   
-  public bool Remove(Coor c){ return true; }  // eliminar elto del cto
+  public bool Remove(Coor c) // eliminar elto del cto
+  { 
+        bool remove = true;
+        int id = SearchElem(c); //Buscamos el elemento
+        if (id == -1) {  remove = false; }  //Si el elemento no está devolvemos false
+        else
+        {
+            for (int i = id; i < oc; i++)       //Eliminamos la coordenada
+            {
+                coors[i] = coors[i + 1];
+            }
+            oc--;
+        }
+        return remove; 
+  }  
 
-  public Coor PopElem(){ Coor c = new Coor(); return c ; }   // extracción de un elto (cualquiera) del cto
+  public Coor PopElem() // extracción de un elto (cualquiera) del cto
+  { 
+        //El de menor coste es el último al tener que desplazar menos elementos?
+        Coor c = new Coor(); return c ; 
+  }   
 
   public int Size(){ return 0; }  // numero de eltos del conjunto
 
