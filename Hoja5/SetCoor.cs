@@ -29,12 +29,14 @@ class SetCoor{
         if (SearchElem(c) != -1) { add = false; }   //Si la coordenada está no se hace nada
         else
         {
-            //Comprobamos si hay espacio en el array
-            if (oc == coors.Length) { /*Excepción*/ }
-            else //Si cabe lo añadimos al array
+            try  //Comprobamos si hay espacio en el array
             {
                 coors[oc] = c;
                 oc++;
+            }
+            catch 
+            {
+                Console.WriteLine("No hay espacio en el conjunto");
             }
         }
 
@@ -79,7 +81,7 @@ class SetCoor{
         string cadena = " ";
         for (int i = 0; i < oc; i++)
         {
-            cadena += coors[i].ToString;
+            cadena += coors[i].ToString();
         }
         return cadena; 
   } 
