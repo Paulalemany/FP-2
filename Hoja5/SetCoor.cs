@@ -29,15 +29,12 @@ class SetCoor{
         if (SearchElem(c) != -1) { add = false; }   //Si la coordenada está no se hace nada
         else
         {
-            try  //Comprobamos si hay espacio en el array
+            if (oc == coors.Length) { throw new Exception("El conjunto está lleno"); }
+            else
             {
                 coors[oc] = c;
                 oc++;
-            }
-            catch 
-            {
-                Console.WriteLine("No hay espacio en el conjunto");
-            }
+            } 
         }
 
         return add; 
@@ -50,20 +47,22 @@ class SetCoor{
         if (id == -1) {  remove = false; }  //Si el elemento no está devolvemos false
         else
         {
-            for (int i = id; i < oc; i++)       //Eliminamos la coordenada
-            {
-                coors[i] = coors[i + 1];
-            }
+            //Eliminamos la coordenada guardando la última
             oc--;
+            coors[id] = coors[oc];
         }
         return remove; 
   }  
 
   public Coor PopElem() // extracción de un elto (cualquiera) del cto
   {
-        //El de menor coste es el último al tener que desplazar menos elementos?
-        oc--;                //La borramos simplemente colocando encima la oc por lo tanto cuando se añada una nueva lo sobreescribirá
-        return coors[oc];    //Devolvemos la coordenada
+        //Comprobamos si el conjunto está vacío
+        if (Size() == 0) throw new Exception("El conjunto es vacío");
+        else
+        {
+            oc--;                //La borramos simplemente colocando encima la oc por lo tanto cuando se añada una nueva lo sobreescribirá
+            return coors[oc];    //Devolvemos la coordenada
+        }
   }   
 
   public int Size(){ return oc; }  // numero de eltos del conjunto
