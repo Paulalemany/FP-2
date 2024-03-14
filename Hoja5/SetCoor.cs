@@ -23,7 +23,23 @@ class SetCoor{
         return i; 
   }
 
-  public bool Add(Coor c){ return true; } // añadir elto al conjunto
+  public bool Add(Coor c) // añadir elto al conjunto
+  {
+        bool Add = true;
+        if (SearchElem(c) != -1) { Add = false; }   //Si la coordenada está no se hace nada
+        else
+        {
+            //Comprobamos si hay espacio en el array
+            if (oc == coors.Length) { /*Excepción*/ }
+            else //Si cabe lo añadimos al array
+            {
+                coors[oc] = c;
+                oc++;
+            }
+        }
+
+        return Add; 
+  } 
   
   public bool Remove(Coor c){ return true; }  // eliminar elto del cto
 
