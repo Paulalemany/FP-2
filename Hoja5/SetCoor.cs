@@ -60,9 +60,8 @@ class SetCoor{
   public Coor PopElem() // extracción de un elto (cualquiera) del cto
   {
         //El de menor coste es el último al tener que desplazar menos elementos?
-        Coor c = coors[oc-1];   //Guardamos la coor que vamos a devolver
-        oc--;                   //La borramos simplemente colocando encima la oc
-        return c ;              //Devolvemos la coordenada
+        oc--;                //La borramos simplemente colocando encima la oc por lo tanto cuando se añada una nueva lo sobreescribirá
+        return coors[oc];    //Devolvemos la coordenada
   }   
 
   public int Size(){ return oc; }  // numero de eltos del conjunto
@@ -76,7 +75,7 @@ class SetCoor{
  
   public override string ToString() // conversión a string
   { 
-
+        //Pasamos los números a string
         return " "; 
   } 
    
