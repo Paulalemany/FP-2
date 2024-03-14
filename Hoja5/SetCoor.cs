@@ -63,9 +63,14 @@ class SetCoor{
         Coor c = new Coor(); return c ; 
   }   
 
-  public int Size(){ return 0; }  // numero de eltos del conjunto
+  public int Size(){ return oc; }  // numero de eltos del conjunto
 
-  public bool IsElementOf(Coor c){ return true; } // pertenencia 
+  public bool IsElementOf(Coor c) // pertenencia 
+  {
+        bool i = true;
+        if ( SearchElem(c) == -1) { i = false; }
+        return i; 
+  } 
  
   public override string ToString(){ return " "; } // conversión a string
    
