@@ -10,10 +10,18 @@ class SetCoor{
   public SetCoor(int tam=10) // constructora
   {
         coors = new Coor[tam];      //Creamos el array con el tamaño correspondiente 
+        oc = 0;
   }   
 
   // Privado. Busca elto en el array y devuelve su posición (-1 si no está)
-  private int SearchElem(Coor c){ return 0; }
+  private int SearchElem(Coor c)
+  {
+        int i = 0;
+        while (i < oc && coors[i] != c) { i++; }
+
+        if (i == oc) { i = -1; }        //Si la coordenada no está en el array se devuelve -1
+        return i; 
+  }
 
   public bool Add(Coor c){ return true; } // añadir elto al conjunto
   
