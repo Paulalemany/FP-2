@@ -8,8 +8,11 @@ namespace Hoja6
 {
     internal class Program
     {
+        #region Globales
+
         const bool DEBUG = true; // para depuración: deja ver posicion de las minas
         static Random rnd = new Random(); // generador de aleatorios para colocar minas
+
         struct Tablero
         {
             // '1'..'8' indica num de minas alrededor   
@@ -19,6 +22,7 @@ namespace Hoja6
             public SetCoor minas;  // Conjunto de (coordenadas de) minas
             public Coor cursor;    // Coordenadas del cursor            
         }
+        #endregion
 
         static void Main(string[] args)
         {
@@ -30,8 +34,11 @@ namespace Hoja6
             // bucle ppal
             while (true)
             {
-                // leer input
-                // procesar input
+                char ch = ' ';
+                while (ch == ' ') { ch = LeeInput(); }
+                ProcesaInput(ref t, ch);
+
+                Render(t);
             }
         }
 
@@ -123,6 +130,7 @@ namespace Hoja6
             Console.SetCursorPosition(tab.cursor.Y * 2 + 1, tab.cursor.X);
         }
 
+        #region Input
         static bool ProcesaInput(ref Tablero t, char c)
         {
             switch (c)
@@ -192,7 +200,9 @@ namespace Hoja6
                 Console.ReadKey().Key.ToString();
             return d;
         }
+        #endregion
 
+        #region Buscaminas
         static bool HayMina(Tablero t, int i, int j)
         {
             return t.minas.IsElementOf(new Coor(i, j));
@@ -234,7 +244,6 @@ namespace Hoja6
 
         */
 
-
         static void DescubreAdyacentes(Tablero t, int x, int y)
         {
             int fils = t.casilla.GetLength(0), cols = t.casilla.GetLength(1);
@@ -260,6 +269,8 @@ namespace Hoja6
                 }
             }
         }
+        #endregion
+
     }
 
 }
