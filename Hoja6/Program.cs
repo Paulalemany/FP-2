@@ -55,12 +55,14 @@ namespace Hoja6
                     t.casilla[i, j] = 'o';
                 }
             t.minas = new SetCoor(fils * cols / 2);
-            t.minas.Add(new Coor(0, 0));
-            t.minas.Add(new Coor(0, 2));
-            t.minas.Add(new Coor(1, 0));
-            t.minas.Add(new Coor(1, 2));
-            t.minas.Add(new Coor(2, 0));
-            t.minas.Add(new Coor(2, 1));
+            //t.minas.Add(new Coor(0, 0));
+            //t.minas.Add(new Coor(0, 2));
+            //t.minas.Add(new Coor(1, 0));
+            //t.minas.Add(new Coor(1, 2));
+            //t.minas.Add(new Coor(2, 0));
+            //t.minas.Add(new Coor(2, 1));
+
+            ponMinas(t, 6);
             return t;
         }
 
@@ -268,6 +270,48 @@ namespace Hoja6
                         }
                 }
             }
+        }
+
+        static void ponMinas(Tablero tab, int nMinas)
+        {
+            int m = 0;
+            //Ponemos las minas 
+            for (int i = 0; i < tab.casilla.GetLength(1) && m < nMinas; i++)    //Recorre las columnas
+            {
+                for (int j = 0; j < tab.casilla.GetLength(1) && m < nMinas; j++)
+                {
+                    tab.minas.Add(new Coor(i, j));
+                    m++;
+                }
+            }
+
+
+            //Ponemos las minas
+            for (int i = 0; i < tab.casilla.GetLength(0) && m > 0; i++)    //Recorre las columnas
+            {
+                for (int j = 0; j < tab.casilla.GetLength(1) && m > 0; j++)    //Recorre las filas
+                {
+                    Coor c = new Coor(i, j);    //Coordenada antigua de la mina
+                    Coor n = new Coor(i, j);    //Coordenada nueva de la mina
+
+                    while (tab.minas.IsElementOf(n))    //Si se va a poner donde ya hay una buscamos una nueva
+                    {
+                        //Vamos moviendo cada mina a una posición aleatoria
+                        //Sacamos las coordenadas nuevas
+                        int x = rnd.Next(tab.casilla.GetLength(0));
+                        int y = rnd.Next(tab.casilla.GetLength(1));
+                        n = new Coor(x, y);
+                    }
+                    
+                    //Eliminamos la anterior y ponemos la nueva
+                    tab.minas.Remove(c);
+                    tab.minas.Add(n);
+
+                    m--;    //Contador de minas movidas
+                }
+
+            }
+                
         }
         #endregion
 
