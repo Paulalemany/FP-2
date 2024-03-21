@@ -311,7 +311,7 @@ namespace Hoja6
             }
 
 
-            //Ponemos las minas
+            //Movemos las minas
             for (int i = 0; i < tab.casilla.GetLength(0) && m > 0; i++)    //Recorre las columnas
             {
                 for (int j = 0; j < tab.casilla.GetLength(1) && m > 0; j++)    //Recorre las filas
@@ -341,7 +341,7 @@ namespace Hoja6
 
         static bool Terminado(Tablero t)
         {
-            bool ter = true;
+            bool ter = false;
 
             //Casillas destapadas
             //Casillas marcadas como mina
