@@ -27,12 +27,18 @@ namespace Hoja6
         static void Main(string[] args)
         {
             // tablero sencillo para depuracion
-            Tablero t = Tab1();
+            int fils, cols, nmins;
+            Console.WriteLine("Escriba el número de filas, columnas y minas: ");
+            fils = int.Parse(Console.ReadLine());
+            cols = int.Parse(Console.ReadLine());
+            nmins = int.Parse(Console.ReadLine());
+
+            Tablero t = CreaTablero(fils, cols, nmins);
 
             Render(t);
 
             // bucle ppal
-            while (true)
+            while (!Terminado(t))
             {
                 char ch = ' ';
                 while (ch == ' ') { ch = LeeInput(); }
@@ -42,6 +48,7 @@ namespace Hoja6
             }
         }
 
+        #region Tablero
         // tablero de prueba
         static Tablero Tab1()
         {
@@ -65,6 +72,24 @@ namespace Hoja6
             ponMinas(t, 6);
             return t;
         }
+
+        static Tablero CreaTablero(int fils, int cols, int nMinas)
+        {
+            Tablero t;
+            t.cursor = new Coor(0, 0);
+            int f = fils, c = cols;
+            t.casilla = new char[fils, cols];
+            for (int i = 0; i < fils; i++)
+                for (int j = 0; j < cols; j++)
+                {
+                    t.casilla[i, j] = 'o';
+                }
+
+            t.minas = new SetCoor(fils * cols / 2);
+            ponMinas(t, nMinas);
+            return t;
+        }
+        #endregion
 
         static void Render(Tablero tab)
         {
@@ -312,6 +337,16 @@ namespace Hoja6
 
             }
                 
+        }
+
+        static bool Terminado(Tablero t)
+        {
+            bool ter = true;
+
+            //Casillas destapadas
+            //Casillas marcadas como mina
+
+            return ter;
         }
         #endregion
 
