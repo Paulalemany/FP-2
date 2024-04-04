@@ -9,9 +9,7 @@ namespace Práctica_2
         static void Main(string[] args)
         {
             Tablero tab = new Tablero("files/levels/level00.dat");
-
-
-
+            tab.Render();
         }
     }
 }

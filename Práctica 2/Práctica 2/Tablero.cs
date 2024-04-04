@@ -50,6 +50,7 @@ namespace Práctica_2
 
         private bool DEBUG = true;  // flag para mensajes de depuracion en consola
 
+        #region tablero
         public Tablero(string file)    //Constructora
         {
             pers = new Personaje[5];    //Array de personajes
@@ -71,8 +72,8 @@ namespace Práctica_2
                     switch (c)
                     {
                         //mapa
-                        case 0: 
-                            cas[j, i] = Casilla.Libre; 
+                        case 0:
+                            cas[j, i] = Casilla.Libre;
                             break;
                         case 1:
                             cas[j, i] = Casilla.Muro;
@@ -89,31 +90,31 @@ namespace Práctica_2
                         //personajes
                         case 5:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[c].pos = new Coor(j, i);
-                            pers[c].dir = new Coor(1, 0);
+                            pers[1].pos = new Coor(j, i);
+                            pers[1].dir = new Coor(1, 0);
                             break;
                         case 6:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[c].pos = new Coor(j, i);
-                            pers[c].dir = new Coor(1, 0);
+                            pers[2].pos = new Coor(j, i);
+                            pers[2].dir = new Coor(1, 0);
                             break;
                         case 7:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[c].pos = new Coor(j, i);
-                            pers[c].dir = new Coor(1, 0);
+                            pers[3].pos = new Coor(j, i);
+                            pers[3].dir = new Coor(1, 0);
                             break;
                         case 8:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[c].pos = new Coor(j, i);
-                            pers[c].dir = new Coor(1, 0);
+                            pers[4].pos = new Coor(j, i);
+                            pers[4].dir = new Coor(1, 0);
                             break;
-                        case 9:
+                        case 9: //pacman
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[c].pos = new Coor(j, i);
-                            pers[c].dir = new Coor(0, 1);
+                            pers[0].pos = new Coor(j, i);
+                            pers[0].dir = new Coor(0, 1);
                             break;
                     }
-                    
+
                 }
             }
             s.Close();
@@ -134,7 +135,7 @@ namespace Práctica_2
             string[] largo = line.Split(' ');
 
             c = largo.Length;
-            f = 0; 
+            f = 0;
 
             //Ahora contamos el número de líneas
             while (!stream.EndOfStream)
@@ -142,10 +143,80 @@ namespace Práctica_2
                 if (line.Length != stream.ReadLine().Length) Console.WriteLine("Error en la línea {0}", f); ///Habría que saltar una excepción
                 f++;
             }
-            if (DEBUG) { Console.WriteLine("Columnas: {0}, Filas: {1}", c, f); }
 
             stream.Close();
         }
+        #endregion
+
+        #region Render
+        public void Render()
+        {
+            TableroRender();
+            PersonajesRender();
+
+            Console.SetCursorPosition(0, cas.GetLength(1) * 2);
+        }
+
+        void TableroRender()
+        {
+            //Pintamos el mapa
+            for (int i = 0; i < cas.GetLength(0); i++)
+            {
+                for (int j = 0; j < cas.GetLength(1); j++)
+                {
+                    Console.SetCursorPosition(i * 2, j);
+                    switch (cas[i, j])
+                    {
+                        case Casilla.Libre:
+                            Console.Write("  ");
+                            break;
+                        case Casilla.Muro:
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.Write("  ");
+                            break;
+                        case Casilla.Comida:
+                            Console.Write("··");
+                            break;
+                        case Casilla.Vitamina:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write("**");
+                            break;
+                        case Casilla.MuroCelda:
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.Write("  ");
+                            break;
+                    }
+
+                   Console.BackgroundColor= ConsoleColor.Black;
+                    Console.ForegroundColor= ConsoleColor.White;
+                }
+            }
+        }
+
+        void PersonajesRender()
+        {
+            //El pacman va a parte
+            Console.SetCursorPosition(pers[0].pos.X * 2, pers[0].pos.Y);
+            Console.BackgroundColor = colors[0];
+
+            //Dependiendo de hacia donde mira cambia el dibujito
+            if (pers[0].dir == new Coor(1, 0)) Console.Write(">>");
+            else if (pers[0].dir == new Coor(0, 1)) Console.Write("VV");
+            else if (pers[0].dir == new Coor(-1, 0)) Console.Write("<<");
+            else if (pers[0].dir == new Coor(0, -1)) Console.Write("∧∧");
+
+
+            for (int i = 1; i < pers.Length; i++)
+            {
+                Console.SetCursorPosition(pers[i].pos.X * 2, pers[i].pos.Y);
+
+                Console.BackgroundColor = colors[i];
+                Console.Write("ºº");
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+        }
+        #endregion
+
 
     }
 }
