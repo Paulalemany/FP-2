@@ -182,7 +182,7 @@ namespace Práctica_2
                             Console.Write("**");
                             break;
                         case Casilla.MuroCelda:
-                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.DarkGray;
                             Console.Write("  ");
                             break;
                     }
@@ -200,11 +200,11 @@ namespace Práctica_2
             Console.BackgroundColor = colors[0];
 
             //Dependiendo de hacia donde mira cambia el dibujito
-            if (pers[0].dir == new Coor(1, 0)) Console.Write(">>");
-            else if (pers[0].dir == new Coor(0, 1)) Console.Write("VV");
-            else if (pers[0].dir == new Coor(-1, 0)) Console.Write("<<");
-            else if (pers[0].dir == new Coor(0, -1)) Console.Write("∧∧");
-
+            if (pers[0].dir.X == 1 && pers[0].dir.Y == 0) Console.Write(">>");
+            else if (pers[0].dir.X == 0 && pers[0].dir.Y == 1) Console.Write("VV");
+            else if (pers[0].dir.X == -1 && pers[0].dir.Y == 0) Console.Write("<<");
+            else if (pers[0].dir.X == 0 && pers[0].dir.Y == -1) Console.Write("∧∧");
+            Console.BackgroundColor = ConsoleColor.Black;
 
             for (int i = 1; i < pers.Length; i++)
             {
@@ -215,6 +215,47 @@ namespace Práctica_2
                 Console.BackgroundColor = ConsoleColor.Black;
             }
         }
+        #endregion
+
+        #region Movimiento Pacman
+        bool Siguiente(Coor pos, Coor dir, out Coor newPos)
+        {
+            //Calcula la nueva posición
+            newPos = pos + dir;
+
+            //Se puede salir por un borde y aparecer por el opuesto (Si hay pasillo)
+            //Comprobamos si está en un borde
+            if (newPos.X > cas.GetLength(0))            //Se conectan los extremos der/izq
+            { newPos.SetX(0); }
+            else if (newPos.Y > cas.GetLength(1))       //Se conectan los extremos down/up
+            { newPos.SetY(0); }
+            else if (newPos.X < 0)                      //Se conectan de izq/der
+            { newPos.SetX(cas.GetLength(0)); }
+            else if (newPos.Y < 0)                      //Se conectan up down
+            { newPos.SetY(cas.GetLength(1)); }
+
+            //Devuelve true si newPos != muro
+            return cas[newPos.X, newPos.Y] != Casilla.Muro; 
+        }
+
+        public void MuevePacman()
+        {
+            //Llamamos al método anterior para ver a donde se tiene que desplazar
+            Coor newPos;
+            if (Siguiente(pers[0].pos, pers[0].dir, out newPos)) pers[0].pos = newPos;
+        }
+
+        public bool CambiaDir(char c)
+        {
+            return true;
+        }
+
+
+        #endregion
+
+        #region Auxiliares
+
+
         #endregion
 
 
