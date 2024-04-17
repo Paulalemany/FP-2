@@ -1,4 +1,5 @@
 ﻿using Coordinates;
+using SetArray;
 
 namespace Práctica_2
 {
@@ -292,6 +293,42 @@ namespace Práctica_2
             //Si llega al final es que no hay ninguno
             if (i == pers.Length) return false;
             else return true;
+        }
+
+        int PosiblesDirs(int fant, out SetCoor cs)
+        {
+            //Creamos el conjunto de coordenadas vacío cs
+            cs = new SetCoor();
+            Coor c1 = new Coor(1,0);
+            Coor c2 = new Coor(0,1);
+
+            //Comprobamos todas las posibles direcciones a las que podemos ir para añadirlas a la lista
+            for (int i = 0; i < 2; i++) 
+            {
+                Coor newCoor = new Coor();
+                //Realmente c1 y c2 son vectores directores no se posición
+                if (Siguiente(pers[fant].pos, c1, out c1) && !HayFantasma(newCoor)) { cs.Add(newCoor); } 
+                if (Siguiente(pers[fant].pos, c2, out c2) && !HayFantasma(newCoor)) { cs.Add(newCoor); } 
+
+                c1.X *= -1; //Coordenadas ((1,0), (-1,0))
+                c2.Y *= -1; //Coordenadas ((0,1), (0,-1))
+            }
+            
+            //Evitamos que se de la vuelta
+            if (cs.Size() != 1)
+            {
+                Coor opuesta = pers[fant].dir;  //Para no modificar el original
+                //Buscamos la dirección opuesta de donde nos estamos moviendo
+                opuesta.X *= -1;
+                opuesta.Y *= -1;
+
+                if (cs.IsElementOf(opuesta)) cs.Remove(opuesta);
+            }
+
+            //Elegimos aleatoriamente una de las direcciones restantes
+
+            return cs.Size();
+
         }
 
         #endregion
