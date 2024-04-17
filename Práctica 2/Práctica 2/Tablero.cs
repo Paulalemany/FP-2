@@ -282,7 +282,7 @@ namespace Práctica_2
 
         #endregion
 
-        #region Movimientos Fantasmas
+        #region Fantasmas
 
         bool HayFantasma(Coor c)
         {
@@ -306,9 +306,10 @@ namespace Práctica_2
             for (int i = 0; i < 2; i++) 
             {
                 Coor newCoor = new Coor();
-                //Realmente c1 y c2 son vectores directores no se posición
-                if (Siguiente(pers[fant].pos, c1, out c1) && !HayFantasma(newCoor)) { cs.Add(newCoor); } 
-                if (Siguiente(pers[fant].pos, c2, out c2) && !HayFantasma(newCoor)) { cs.Add(newCoor); } 
+                //Realmente c1 y c2 son vectores directores no su posición
+                //Lo que hay que añadir a cs son las direcciones no las posiciones
+                if (Siguiente(pers[fant].pos, c1, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c1); } 
+                if (Siguiente(pers[fant].pos, c2, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c2); } 
 
                 c1.X *= -1; //Coordenadas ((1,0), (-1,0))
                 c2.Y *= -1; //Coordenadas ((0,1), (0,-1))
@@ -325,10 +326,48 @@ namespace Práctica_2
                 if (cs.IsElementOf(opuesta)) cs.Remove(opuesta);
             }
 
-            //Elegimos aleatoriamente una de las direcciones restantes
-
             return cs.Size();
 
+        }
+
+        void SeleccionaDir(int fant)
+        {
+            SetCoor cs = new SetCoor();
+            PosiblesDirs(fant, out cs);
+
+            pers[fant].dir = cs.PopElem();
+        }
+
+        void EliminaMuroFantasmas()
+        {
+            //Buscamos las casillas de muro celda
+            for (int i = 0; i < cas.GetLength(0); i++)
+            {
+                for (int j = 0; j < cas.GetLength(1); j++)
+                {
+                    //Cuando encontramos el muro lo cambiamos
+                    if (cas[i, j] == Casilla.MuroCelda) cas[i, j] = Casilla.Libre;  
+
+                    ///Puede que esto sea poco eficiente ya que tiene que buscar en todo el array y no termina hasta el final
+                }
+            }
+        }
+
+        public void MueveFantasmas(int lap)
+        {
+            if (lap <= 0)
+            {
+                EliminaMuroFantasmas();
+                //Empieza en 1 porque nos saltamos al pacman
+                for (int i = 1; i < pers.Length; i++)
+                {
+                    Coor newCoor = new Coor();
+                    SeleccionaDir(i);
+                    //Si se puede desplazar en esa dirección lo movemos
+                    if (Siguiente(pers[i].pos, pers[i].dir, out newCoor)) pers[i].pos = newCoor;
+                }
+            }
+            
         }
 
         #endregion

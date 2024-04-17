@@ -12,6 +12,8 @@ namespace Práctica_2
             tab.Render();
 
             int lap = 200;  //Retardo para bucle principal
+            int lapFantasmas = 3000;
+
             char c = ' ';
 
             while (true)    //Poner condición del juego
@@ -24,12 +26,16 @@ namespace Práctica_2
                 tab.MuevePacman();
 
                 //IA de los fantasmas
+                tab.MueveFantasmas(lapFantasmas);
 
                 //Renderizado
                 tab.Render();
 
                 //retardo
                 System.Threading.Thread.Sleep(lap);
+
+                //Celda de los fantasmas
+                lapFantasmas -= lap;
             }
         }
 
