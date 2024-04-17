@@ -1,9 +1,4 @@
 ﻿using Coordinates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Práctica_2
 {
@@ -242,14 +237,62 @@ namespace Práctica_2
         {
             //Llamamos al método anterior para ver a donde se tiene que desplazar
             Coor newPos;
+
             if (Siguiente(pers[0].pos, pers[0].dir, out newPos)) pers[0].pos = newPos;
         }
 
+        //Sería el procesa input
         public bool CambiaDir(char c)
         {
-            return true;
+            Coor newPos;
+            Coor newDir = pers[0].dir;
+            bool cambia = false;
+
+            if (c == 'l')
+            {
+                newDir.SetX(-1);        //izquierda
+                newDir.SetY(0);
+            }
+            else if (c == 'r')
+            {
+                newDir.SetX(1);         //derecha
+                newDir.SetY(0);
+            }
+            else if (c == 'u')
+            {
+                newDir.SetX(0);
+                newDir.SetY(-1);        //arriba 
+            }
+            else if (c == 'd')
+            {
+                newDir.SetX(0);
+                newDir.SetY(1);         //abajo
+            }
+
+            if (Siguiente(pers[0].pos, newDir, out newPos))
+            {
+                pers[0].dir = newDir;
+                cambia = true;
+            }
+
+            return cambia;
         }
 
+
+        #endregion
+
+        #region Movimientos Fantasmas
+
+        bool HayFantasma(Coor c)
+        {
+            //Hacemos un bucle buscando si alguno de los fantasmas está en la pos c
+            int i = 1;
+            while (i < pers.Length && pers[i].pos != c) { i++; }
+
+            //Si llega al final es que no hay ninguno
+            if (i == pers.Length) return false;
+            else return true;
+        }
 
         #endregion
 
