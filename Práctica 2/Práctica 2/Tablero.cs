@@ -76,9 +76,11 @@ namespace Práctica_2
                             break;
                         case 2:
                             cas[j, i] = Casilla.Comida;
+                            numComida++;
                             break;
                         case 3:
                             cas[j, i] = Casilla.Vitamina;
+                            numComida++;
                             break;
                         case 4:
                             cas[j, i] = Casilla.MuroCelda;
@@ -154,7 +156,6 @@ namespace Práctica_2
             TableroRender();
             PersonajesRender();
 
-            Console.SetCursorPosition(0, cas.GetLength(1) * 2);
         }
 
         void TableroRender()
@@ -203,7 +204,7 @@ namespace Práctica_2
             if (pers[0].dir.X == 1 && pers[0].dir.Y == 0) Console.Write(">>");
             else if (pers[0].dir.X == 0 && pers[0].dir.Y == 1) Console.Write("VV");
             else if (pers[0].dir.X == -1 && pers[0].dir.Y == 0) Console.Write("<<");
-            else if (pers[0].dir.X == 0 && pers[0].dir.Y == -1) Console.Write("∧∧");
+            else if (pers[0].dir.X == 0 && pers[0].dir.Y == -1) Console.Write("AA");
             Console.BackgroundColor = ConsoleColor.Black;
 
             for (int i = 1; i < pers.Length; i++)
@@ -245,18 +246,27 @@ namespace Práctica_2
 
             if (Siguiente(pers[0].pos, pers[0].dir, out newPos)) pers[0].pos = newPos;
 
-            //Comprobamos si está encima de una vitamina
             if (cas[pers[0].pos.X, pers[0].pos.Y] == Casilla.Vitamina)
             {
-                //Si es así devolvemos los fantasmas a su origen y cambiamos la casilla a libre
-                cas[pers[0].pos.X, pers[0].pos.Y] = Casilla.Libre;
-
                 //Movemos todos los fantasmas a su inicio
                 for (int i = 1; i < pers.Length; i++)
                 {
                     pers[i].pos = pers[i].ini;
                 }
+
+                // Si es así devolvemos los fantasmas a su origen y cambiamos la casilla a libre
+                cas[pers[0].pos.X, pers[0].pos.Y] = Casilla.Libre;
+                numComida--;
             }
+            //Comprobamos si está encima de una vitamina o comida
+            else if (cas[pers[0].pos.X, pers[0].pos.Y] == Casilla.Comida)
+            {
+                //Si es así devolvemos los fantasmas a su origen y cambiamos la casilla a libre
+                cas[pers[0].pos.X, pers[0].pos.Y] = Casilla.Libre;
+                numComida--;
+                
+            }
+
         }
 
         //Sería el procesa input
@@ -385,6 +395,28 @@ namespace Práctica_2
             
         }
 
+        #endregion
+
+        #region Final Nivel
+
+        public bool Captura()
+        {
+            bool captura  = true;
+
+            int i = 1;
+            while (i < pers.Length && pers[i].pos != pers[0].pos) { i++; }
+
+            //Si llega al final significa que no coincide con ninguno
+            if (i == pers.Length) captura = false;
+
+            return captura;
+        }
+
+        public bool FinNivel()
+        {
+            //Si la comida es menor o igual a 0 significa que ha ganado el jugador
+            return numComida < 0;
+        }
         #endregion
 
 

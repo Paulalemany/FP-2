@@ -1,22 +1,25 @@
 ﻿//Paula Alemany Rodríguez
 
-using FP2P2;
-
 namespace Práctica_2
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero("levels/level00.dat");
+            Tablero tab;
+
+            LevelMenu(out tab);
             tab.Render();
 
             int lap = 200;  //Retardo para bucle principal
-            int lapFantasmas = 3000;
+            int lapFantasmas = 3000;    //Retardo de los fantasmas
+
+            bool gameOver = false;
+            bool win = false;
 
             char c = ' ';
 
-            while (true)    //Poner condición del juego
+            while (!gameOver && !win)    //Poner condición del juego
             {
                 //Input del usuario
                 LeeInput(ref c);
@@ -27,6 +30,7 @@ namespace Práctica_2
 
                 //IA de los fantasmas
                 tab.MueveFantasmas(lapFantasmas);
+                gameOver = tab.Captura();              //comprobar colisiones
 
                 //Renderizado
                 tab.Render();
@@ -36,7 +40,12 @@ namespace Práctica_2
 
                 //Celda de los fantasmas
                 lapFantasmas -= lap;
+
+                //Comprobamos si gana el pacman
+                win = tab.FinNivel();
             }
+            FinPartida(win);
+
         }
 
         static void LeeInput(ref char dir)
@@ -53,6 +62,29 @@ namespace Práctica_2
                 }
             }
             while (Console.KeyAvailable) Console.ReadKey().Key.ToString();
+        }
+
+        static void FinPartida(bool win)
+        {
+            Console.Clear();
+            if (win)
+            {
+                Console.WriteLine("FELICIDADES POR TU VICTORIA :D");
+            }
+            else { Console.WriteLine("F Ya lo conseguirás a la próxima :("); }
+        }
+
+        static void LevelMenu(out Tablero tab)
+        {
+            Console.WriteLine("¿Qué nivel quiere jugar?");
+            string level = Console.ReadLine();
+
+            //Añadimos el 0 si es necesario
+            if (level.Length < 2) level = "0" + level;
+
+            string file = "levels/level" + level + ".dat";
+
+            tab = new Tablero(file);
         }
 
     }
