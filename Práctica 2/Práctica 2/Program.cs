@@ -7,44 +7,57 @@ namespace Práctica_2
         static void Main(string[] args)
         {
             Tablero tab;
-
-            LevelMenu(out tab);
-            tab.Render();
-
             int lap = 200;  //Retardo para bucle principal
             int lapFantasmas = 3000;    //Retardo de los fantasmas
+            int level = 0;
+
+            LevelMenu(out tab, ref level);
+            tab.Render();
 
             bool gameOver = false;
             bool win = false;
+            bool exit = false;
 
             char c = ' ';
 
-            while (!gameOver && !win)    //Poner condición del juego
+            while (!exit)
             {
-                //Input del usuario
-                LeeInput(ref c);
+                //Juego
+                while (!gameOver && !win)    //Poner condición del juego
+                {
+                    //Input del usuario
+                    LeeInput(ref c);
 
-                //Procesamiento del input
-                if (c != ' ' && tab.CambiaDir(c)) c = ' ';
-                tab.MuevePacman();
+                    //Procesamiento del input
+                    if (c != ' ' && tab.CambiaDir(c)) c = ' ';
+                    tab.MuevePacman();
 
-                //IA de los fantasmas
-                tab.MueveFantasmas(lapFantasmas);
-                gameOver = tab.Captura();              //comprobar colisiones
+                    //IA de los fantasmas
+                    tab.MueveFantasmas(lapFantasmas);
+                    gameOver = tab.Captura();              //comprobar colisiones
 
-                //Renderizado
-                tab.Render();
+                    //Renderizado
+                    tab.Render();
 
-                //retardo
-                System.Threading.Thread.Sleep(lap);
+                    //retardo
+                    System.Threading.Thread.Sleep(lap);
 
-                //Celda de los fantasmas
-                lapFantasmas -= lap;
+                    //Celda de los fantasmas
+                    lapFantasmas -= lap;
 
-                //Comprobamos si gana el pacman
-                win = tab.FinNivel();
+                    //Comprobamos si gana el pacman
+                    win = tab.FinNivel();
+                }
+                //resultado de la partida
+                FinPartida(win);
+
+                //Continuación de la partida
+                LevelMenu(out tab, ref level);
+                win = false;
+                gameOver = false;
             }
-            FinPartida(win);
+            
+            
 
         }
 
@@ -74,10 +87,10 @@ namespace Práctica_2
             else { Console.WriteLine("F Ya lo conseguirás a la próxima :("); }
         }
 
-        static void LevelMenu(out Tablero tab)
+        static void LevelMenu(out Tablero tab, ref int l)
         {
-            Console.WriteLine("¿Qué nivel quiere jugar?");
-            string level = Console.ReadLine();
+            Console.WriteLine("Cargando nivel {0}", l);
+            string level = l.ToString();
 
             //Añadimos el 0 si es necesario
             if (level.Length < 2) level = "0" + level;
@@ -85,6 +98,10 @@ namespace Práctica_2
             string file = "levels/level" + level + ".dat";
 
             tab = new Tablero(file);
+            l++;
+
+            //retardo
+            System.Threading.Thread.Sleep(2000);
         }
 
     }
