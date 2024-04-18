@@ -221,14 +221,14 @@ namespace Práctica_2
 
             //Se puede salir por un borde y aparecer por el opuesto (Si hay pasillo)
             //Comprobamos si está en un borde
-            if (newPos.X > cas.GetLength(0))            //Se conectan los extremos der/izq
+            if (newPos.X >= cas.GetLength(0))            //Se conectan los extremos der/izq
             { newPos.SetX(0); }
-            else if (newPos.Y > cas.GetLength(1))       //Se conectan los extremos down/up
+            else if (newPos.Y >= cas.GetLength(1))       //Se conectan los extremos down/up
             { newPos.SetY(0); }
             else if (newPos.X < 0)                      //Se conectan de izq/der
-            { newPos.SetX(cas.GetLength(0)); }
+            { newPos.SetX(cas.GetLength(0) - 1); }
             else if (newPos.Y < 0)                      //Se conectan up down
-            { newPos.SetY(cas.GetLength(1)); }
+            { newPos.SetY(cas.GetLength(1) - 1); }
 
             //Devuelve true si newPos != muro
             return cas[newPos.X, newPos.Y] != Casilla.Muro; 
