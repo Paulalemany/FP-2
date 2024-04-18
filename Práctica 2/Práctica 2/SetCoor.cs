@@ -61,6 +61,16 @@ class SetCoor {
         }
     }
 
+    //Método auxiliar para coger una de las coordenadas del conjunto
+    public Coor TakeElement(int i)
+    {
+        if (i > coors.Length) throw new Exception("Error SetCoor.GetElem: Index out of array");
+        else
+        {
+            return coors[i];
+        }
+    }
+
     public bool Empty() { return oc == 0; }
     public int Size() { return oc; }
 

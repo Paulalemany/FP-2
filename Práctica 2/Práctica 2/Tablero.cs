@@ -301,20 +301,17 @@ namespace Práctica_2
             cs = new SetCoor();
             Coor c1 = new Coor(1,0);
             Coor c2 = new Coor(0,1);
+            Coor c3 = new Coor(-1,0);
+            Coor c4 = new Coor(0,-1);
 
-            //Comprobamos todas las posibles direcciones a las que podemos ir para añadirlas a la lista
-            for (int i = 0; i < 2; i++) 
-            {
-                Coor newCoor = new Coor();
-                //Realmente c1 y c2 son vectores directores no su posición
-                //Lo que hay que añadir a cs son las direcciones no las posiciones
-                if (Siguiente(pers[fant].pos, c1, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c1); } 
-                if (Siguiente(pers[fant].pos, c2, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c2); } 
+            Coor newCoor = new Coor();
+            //Realmente c1 y c2 son vectores directores no su posición
+            //Lo que hay que añadir a cs son las direcciones no las posiciones
+            if (Siguiente(pers[fant].pos, c1, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c1); }
+            if (Siguiente(pers[fant].pos, c2, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c2); }
+            if (Siguiente(pers[fant].pos, c3, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c3); }
+            if (Siguiente(pers[fant].pos, c4, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c4); }
 
-                c1.X *= -1; //Coordenadas ((1,0), (-1,0))
-                c2.Y *= -1; //Coordenadas ((0,1), (0,-1))
-            }
-            
             //Evitamos que se de la vuelta
             if (cs.Size() != 1)
             {
@@ -335,7 +332,8 @@ namespace Práctica_2
             SetCoor cs = new SetCoor();
             PosiblesDirs(fant, out cs);
 
-            pers[fant].dir = cs.PopElem();
+            int index = rnd.Next(cs.Size());
+            pers[fant].dir = cs.TakeElement(index);
         }
 
         void EliminaMuroFantasmas()
