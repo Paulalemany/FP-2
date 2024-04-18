@@ -87,21 +87,25 @@ namespace Práctica_2
                         case 5:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
                             pers[1].pos = new Coor(j, i);
+                            pers[1].ini = pers[1].pos;
                             pers[1].dir = new Coor(1, 0);
                             break;
                         case 6:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
                             pers[2].pos = new Coor(j, i);
                             pers[2].dir = new Coor(1, 0);
+                            pers[2].ini = pers[2].pos;
                             break;
                         case 7:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
                             pers[3].pos = new Coor(j, i);
+                            pers[3].ini = pers[3].pos;
                             pers[3].dir = new Coor(1, 0);
                             break;
                         case 8:
                             cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
                             pers[4].pos = new Coor(j, i);
+                            pers[4].ini = pers[4].pos;
                             pers[4].dir = new Coor(1, 0);
                             break;
                         case 9: //pacman
@@ -240,6 +244,19 @@ namespace Práctica_2
             Coor newPos;
 
             if (Siguiente(pers[0].pos, pers[0].dir, out newPos)) pers[0].pos = newPos;
+
+            //Comprobamos si está encima de una vitamina
+            if (cas[pers[0].pos.X, pers[0].pos.Y] == Casilla.Vitamina)
+            {
+                //Si es así devolvemos los fantasmas a su origen y cambiamos la casilla a libre
+                cas[pers[0].pos.X, pers[0].pos.Y] = Casilla.Libre;
+
+                //Movemos todos los fantasmas a su inicio
+                for (int i = 1; i < pers.Length; i++)
+                {
+                    pers[i].pos = pers[i].ini;
+                }
+            }
         }
 
         //Sería el procesa input
@@ -367,11 +384,6 @@ namespace Práctica_2
             }
             
         }
-
-        #endregion
-
-        #region Auxiliares
-
 
         #endregion
 
