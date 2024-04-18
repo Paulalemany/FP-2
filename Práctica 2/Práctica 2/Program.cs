@@ -1,6 +1,6 @@
 ﻿//Paula Alemany Rodríguez
 
-using Coordinates;
+using FP2P2;
 
 namespace Práctica_2
 {

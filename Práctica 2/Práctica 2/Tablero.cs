@@ -1,4 +1,4 @@
-﻿using Coordinates;
+﻿using FP2P2;
 using SetArray;
 
 namespace Práctica_2
@@ -222,13 +222,13 @@ namespace Práctica_2
             //Se puede salir por un borde y aparecer por el opuesto (Si hay pasillo)
             //Comprobamos si está en un borde
             if (newPos.X >= cas.GetLength(0))            //Se conectan los extremos der/izq
-            { newPos.SetX(0); }
+            { newPos.X = 0; }
             else if (newPos.Y >= cas.GetLength(1))       //Se conectan los extremos down/up
-            { newPos.SetY(0); }
+            { newPos.Y = 0; }
             else if (newPos.X < 0)                      //Se conectan de izq/der
-            { newPos.SetX(cas.GetLength(0) - 1); }
+            { newPos.X = cas.GetLength(0) - 1; }
             else if (newPos.Y < 0)                      //Se conectan up down
-            { newPos.SetY(cas.GetLength(1) - 1); }
+            { newPos.Y = cas.GetLength(1) - 1; }
 
             //Devuelve true si newPos != muro
             return cas[newPos.X, newPos.Y] != Casilla.Muro; 
@@ -251,23 +251,23 @@ namespace Práctica_2
 
             if (c == 'l')
             {
-                newDir.SetX(-1);        //izquierda
-                newDir.SetY(0);
+                newDir.X = -1;        //izquierda
+                newDir.Y = 0;
             }
             else if (c == 'r')
             {
-                newDir.SetX(1);         //derecha
-                newDir.SetY(0);
+                newDir.X = 1;         //derecha
+                newDir.Y = 0;
             }
             else if (c == 'u')
             {
-                newDir.SetX(0);
-                newDir.SetY(-1);        //arriba 
+                newDir.X = 0;
+                newDir.Y = -1;        //arriba 
             }
             else if (c == 'd')
             {
-                newDir.SetX(0);
-                newDir.SetY(1);         //abajo
+                newDir.X = 0;
+                newDir.Y = 1;         //abajo
             }
 
             if (Siguiente(pers[0].pos, newDir, out newPos))
