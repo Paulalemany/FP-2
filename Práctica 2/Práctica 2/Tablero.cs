@@ -246,7 +246,7 @@ namespace Práctica_2
         public bool CambiaDir(char c)
         {
             Coor newPos;
-            Coor newDir = pers[0].dir;
+            Coor newDir = new Coor();
             bool cambia = false;
 
             if (c == 'l')
