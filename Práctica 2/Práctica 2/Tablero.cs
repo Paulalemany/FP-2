@@ -1,5 +1,6 @@
 ﻿using FP2P2;
 using SetArray;
+using System.Xml.Linq;
 
 namespace Práctica_2
 {
@@ -123,6 +124,21 @@ namespace Práctica_2
             lapFantasmas = lapCarcelFantasmas;
             if (DEBUG) { rnd = new Random(100); }
             else rnd = new Random();
+        }
+
+        public void GuardarPartida()
+        {
+            StreamWriter s = new StreamWriter("partida.dat");
+
+            for (int i = 0; i < cas.GetLength(0); i++)
+            {
+                for (int j = 0; j < cas.GetLength(1); j++)
+                {
+                    //Guardamos cada dato
+                }
+            }
+
+            s.Close();
         }
 
         //Método auxiliar para contar número de filas y de columnas
@@ -340,7 +356,7 @@ namespace Práctica_2
             if (Siguiente(pers[fant].pos, c4, out newCoor) && !HayFantasma(newCoor)) { cs.Add(c4); }
 
             //Evitamos que se de la vuelta
-            if (cs.Size() != 1)
+            if (cs.Size() > 1)
             {
                 Coor opuesta = pers[fant].dir;  //Para no modificar el original
                 //Buscamos la dirección opuesta de donde nos estamos moviendo
@@ -349,6 +365,7 @@ namespace Práctica_2
 
                 if (cs.IsElementOf(opuesta)) cs.Remove(opuesta);
             }
+            else cs.Add(new Coor(0, 0));    //Por si se quedan sin ninguna direccion a la que moverse que no sea nulo
 
             return cs.Size();
 
@@ -356,7 +373,7 @@ namespace Práctica_2
 
         void SeleccionaDir(int fant)
         {
-            SetCoor cs = new SetCoor();
+            SetCoor cs;
             PosiblesDirs(fant, out cs);
 
             int index = rnd.Next(cs.Size());

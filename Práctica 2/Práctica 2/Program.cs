@@ -20,7 +20,7 @@ namespace Práctica_2
 
             char c = ' ';
 
-            while (!exit)
+            while (!exit)   //Lógica para cargar el siguiente nivel
             {
                 //Juego
                 while (!gameOver && !win)    //Poner condición del juego
@@ -29,12 +29,25 @@ namespace Práctica_2
                     LeeInput(ref c);
 
                     //Procesamiento del input
-                    if (c != ' ' && tab.CambiaDir(c)) c = ' ';
+                    if (c != ' ')
+                    {
+                        if (c == 'p')
+                        {
+                            //Menú de pausa
+                            PauseMenu(tab);
+
+                        }
+                        else tab.CambiaDir(c);
+
+                        c = ' ';
+                    }
+                    
                     tab.MuevePacman();
+                    gameOver = tab.Captura();              //comprobar colisiones
 
                     //IA de los fantasmas
                     tab.MueveFantasmas(lapFantasmas);
-                    gameOver = tab.Captura();              //comprobar colisiones
+                    if (!gameOver) gameOver = tab.Captura();              //comprobar colisiones
 
                     //Renderizado
                     tab.Render();
@@ -49,10 +62,12 @@ namespace Práctica_2
                     win = tab.FinNivel();
                 }
                 //resultado de la partida
-                FinPartida(win);
+                FinPartida(win, ref level);
+
+                //Poner un menú para salir, guardar etc...
 
                 //Continuación de la partida
-                LevelMenu(out tab, ref level);
+                LevelMenu(out tab, level);
                 win = false;
                 gameOver = false;
             }
@@ -72,22 +87,24 @@ namespace Práctica_2
                     case "UpArrow": dir = 'u'; break;
                     case "RightArrow": dir = 'r'; break;
                     case "DownArrow": dir = 'd'; break;
+                    case "P": dir = 'p'; break;
                 }
             }
             while (Console.KeyAvailable) Console.ReadKey().Key.ToString();
         }
 
-        static void FinPartida(bool win)
+        static void FinPartida(bool win, ref int l)
         {
             Console.Clear();
             if (win)
             {
                 Console.WriteLine("FELICIDADES POR TU VICTORIA :D");
+                l++;    //para que pase al siguiente nivel solo si gana
             }
             else { Console.WriteLine("F Ya lo conseguirás a la próxima :("); }
         }
 
-        static void LevelMenu(out Tablero tab, ref int l)
+        static void LevelMenu(out Tablero tab, int l)
         {
             Console.WriteLine("Cargando nivel {0}", l);
             string level = l.ToString();
@@ -98,10 +115,28 @@ namespace Práctica_2
             string file = "levels/level" + level + ".dat";
 
             tab = new Tablero(file);
-            l++;
-
+            
             //retardo
             System.Threading.Thread.Sleep(2000);
+        }
+
+        static void PauseMenu(Tablero tab) //En todas estas cosas habría que poner excepciones por si el usuario pone algoo no valido
+        {
+            Console.Clear();
+
+            Console.WriteLine("Continuar [0], Guardar y salir [1]");
+
+            int e = int.Parse(Console.ReadLine());
+
+            if (e == 0) { } //Simplemente continuamos la partida
+            else
+            {
+                //Sistema para guardar la partida
+                tab.GuardarPartida();
+                
+            }
+
+
         }
 
     }
