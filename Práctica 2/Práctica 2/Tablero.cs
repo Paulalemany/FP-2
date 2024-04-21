@@ -128,14 +128,38 @@ namespace Práctica_2
 
         public void GuardarPartida()
         {
-            StreamWriter s = new StreamWriter("partida.dat");
+            StreamWriter s = new StreamWriter("partida.txt");
 
-            for (int i = 0; i < cas.GetLength(0); i++)
+            for (int i = 0; i < cas.GetLength(0); i++)  //Columnas
             {
-                for (int j = 0; j < cas.GetLength(1); j++)
+                for (int j = 0; j < cas.GetLength(1); j++)  //filas
                 {
                     //Guardamos cada dato
+                    switch(cas[j,i])
+                    {
+                        //Estados de la casilla
+                        case Casilla.Libre:
+                            s.Write("0");
+                            break;
+                        case Casilla.Muro:
+                            s.Write("1");
+                            break;
+                        case Casilla.Comida:
+                            s.Write("2");
+                            break;
+                        case Casilla.Vitamina:
+                            s.Write("3");
+                            break;
+                        case Casilla.MuroCelda:
+                            s.Write("4");
+                            break;
+
+                    }
+
+                    //Hacer salto de línea si llega al final (j == cas.GetLenght(1)-1)
+                    if (i == cas.GetLength(0) - 1) s.Write('\n');
                 }
+                
             }
 
             s.Close();

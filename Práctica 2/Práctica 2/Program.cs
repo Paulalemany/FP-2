@@ -11,7 +11,7 @@ namespace Práctica_2
             int lapFantasmas = 3000;    //Retardo de los fantasmas
             int level = 0;
 
-            LevelMenu(out tab, ref level);
+            LevelMenu(out tab, level);
             tab.Render();
 
             bool gameOver = false;
