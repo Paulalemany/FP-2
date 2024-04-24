@@ -162,6 +162,40 @@ namespace Práctica_2
                 
             }
 
+            //Guardamos los personajes en líneas aparte para guardar todos los datos
+            for (int i = 0; i < pers.Length; i++)
+            {
+                switch (i)
+                {
+                    //Pacman
+                    case 0:
+                        s.Write('9');
+                        break;
+
+                    case 1:
+                        s.Write('5');
+                        break;
+
+                    case 2:
+                        s.Write('6');
+                        break;
+
+                    case 3:
+                        s.Write('7');
+                        break;
+                    case 4:
+                        s.Write('8');
+                        break;
+
+                }
+
+                s.Write(pers[i].pos.ToString());
+                s.Write(pers[i].ini.ToString());
+                s.Write(pers[i].dir.ToString());
+
+                s.Write('\n');
+            }
+
             s.Close();
         }
 
