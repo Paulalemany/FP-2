@@ -64,59 +64,66 @@ namespace Práctica_2
                 string[] largo = linea.Split(' ');
                 for (int j = 0; j < columnas; j++)
                 {
-                    int c = int.Parse(largo[j]);
-
-                    switch (c)
+                    if (largo[j] == "") { }
+                    else
                     {
-                        //mapa
-                        case 0:
-                            cas[j, i] = Casilla.Libre;
-                            break;
-                        case 1:
-                            cas[j, i] = Casilla.Muro;
-                            break;
-                        case 2:
-                            cas[j, i] = Casilla.Comida;
-                            numComida++;
-                            break;
-                        case 3:
-                            cas[j, i] = Casilla.Vitamina;
-                            numComida++;
-                            break;
-                        case 4:
-                            cas[j, i] = Casilla.MuroCelda;
-                            break;
-                        //personajes
-                        case 5:
-                            cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[1].pos = new Coor(j, i);
-                            pers[1].ini = pers[1].pos;
-                            pers[1].dir = new Coor(1, 0);
-                            break;
-                        case 6:
-                            cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[2].pos = new Coor(j, i);
-                            pers[2].dir = new Coor(1, 0);
-                            pers[2].ini = pers[2].pos;
-                            break;
-                        case 7:
-                            cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[3].pos = new Coor(j, i);
-                            pers[3].ini = pers[3].pos;
-                            pers[3].dir = new Coor(1, 0);
-                            break;
-                        case 8:
-                            cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[4].pos = new Coor(j, i);
-                            pers[4].ini = pers[4].pos;
-                            pers[4].dir = new Coor(1, 0);
-                            break;
-                        case 9: //pacman
-                            cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                            pers[0].pos = new Coor(j, i);
-                            pers[0].dir = new Coor(0, 1);
-                            break;
+                        int c = int.Parse(largo[j]);
+
+                        switch (c)
+                        {
+                            //mapa
+                            case 0:
+                                cas[j, i] = Casilla.Libre;
+                                break;
+                            case 1:
+                                cas[j, i] = Casilla.Muro;
+                                break;
+                            case 2:
+                                cas[j, i] = Casilla.Comida;
+                                numComida++;
+                                break;
+                            case 3:
+                                cas[j, i] = Casilla.Vitamina;
+                                numComida++;
+                                break;
+                            case 4:
+                                cas[j, i] = Casilla.MuroCelda;
+                                break;
+
+                            //personajes
+                            case 5:
+                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
+                                pers[1].pos = new Coor(j, i);
+                                pers[1].ini = pers[1].pos;
+                                pers[1].dir = new Coor(1, 0);
+                                break;
+                            case 6:
+                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
+                                pers[2].pos = new Coor(j, i);
+                                pers[2].dir = new Coor(1, 0);
+                                pers[2].ini = pers[2].pos;
+                                break;
+                            case 7:
+                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
+                                pers[3].pos = new Coor(j, i);
+                                pers[3].ini = pers[3].pos;
+                                pers[3].dir = new Coor(1, 0);
+                                break;
+                            case 8:
+                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
+                                pers[4].pos = new Coor(j, i);
+                                pers[4].ini = pers[4].pos;
+                                pers[4].dir = new Coor(1, 0);
+                                break;
+                            case 9: //pacman
+                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
+                                pers[0].pos = new Coor(j, i);
+                                pers[0].ini = pers[0].pos;
+                                pers[0].dir = new Coor(0, 1);
+                                break;
+                        }
                     }
+                    
 
                 }
             }
@@ -126,43 +133,92 @@ namespace Práctica_2
             else rnd = new Random();
         }
 
+        //Me falta una fila entera por algún motivo que desconozco
         public void GuardarPartida()
         {
             StreamWriter s = new StreamWriter("partida.txt");
 
-            for (int i = 0; i < cas.GetLength(0); i++)  //Columnas
+            int k;
+            for (int i = 0; i < cas.GetLength(1); i++)  //Columnas
             {
-                for (int j = 0; j < cas.GetLength(1); j++)  //filas
+                for (int j = 0; j < cas.GetLength(0); j++)  //filas
                 {
-                    //Guardamos cada dato
-                    switch(cas[j,i])
+                    if (j == 27) 
+                    { 
+                        string t; 
+                    }
+                    //Si hay un personaje en la casilla guardamos el personaje
+                    if (PersonajeCasilla(i, j, out k))
                     {
+                        string num = " ";
+
+                        switch (k)
+                        {
+                            case 0:
+                                num = "9 ";
+                                break;
+                            case (1):
+                                num = "5 ";
+                                break;
+                            case (2):
+                                num = "6 ";
+                                break;
+                            case (3):
+                                num = "7 ";
+                                break;
+                            case (4):
+                                num = "8 ";
+                                break;
+
+                        }
+                        s.Write(num);
+                    }
+                    else
+                    {
+                       //Guardamos la casilla
+                       switch (cas[j, i])
+                       {
                         //Estados de la casilla
                         case Casilla.Libre:
-                            s.Write("0");
+                            s.Write("0 ");
                             break;
                         case Casilla.Muro:
-                            s.Write("1");
+                            s.Write("1 ");
                             break;
                         case Casilla.Comida:
-                            s.Write("2");
+                            s.Write("2 ");
                             break;
                         case Casilla.Vitamina:
-                            s.Write("3");
+                            s.Write("3 ");
                             break;
                         case Casilla.MuroCelda:
-                            s.Write("4");
+                            s.Write("4 ");
                             break;
 
+                       }
                     }
 
-                    //Hacer salto de línea si llega al final (j == cas.GetLenght(1)-1)
-                    if (i == cas.GetLength(0) - 1) s.Write('\n');
                 }
-                
+                s.Write('\n');
             }
 
+            
+
             s.Close();
+        }
+
+        //Método para ver si en la posición hay un personaje
+        bool PersonajeCasilla(int i, int j, out int k)
+        {
+            k = 0;
+            while (k < pers.Length && (j != pers[k].pos.X || i != pers[k].pos.Y)) k++;
+
+            if (k == pers.Length)
+            {
+                //No ha encontrado ningún personaje en la psoición
+                return false;
+            }
+            else return true;
         }
 
         //Método auxiliar para contar número de filas y de columnas
@@ -229,7 +285,7 @@ namespace Práctica_2
                     }
 
                    Console.BackgroundColor= ConsoleColor.Black;
-                    Console.ForegroundColor= ConsoleColor.White;
+                   Console.ForegroundColor= ConsoleColor.White;
                 }
             }
         }
