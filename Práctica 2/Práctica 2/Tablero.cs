@@ -125,48 +125,6 @@ namespace Práctica_2
                     }
                     
 
-                    if (file == "partida.txt")
-                    {
-                        //La carga de los personajes es diferente
-                        string personajes = s.ReadLine();
-                        string[] data = personajes.Split(' ');
-
-                        //El primer dato es el personaje que es
-                        switch (data[0])
-                        {
-                            case "5":
-                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                                pers[1].pos = new Coor(int.Parse(data[1]), int.Parse(data[2]));
-                                pers[1].ini = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                pers[1].dir = new Coor(int.Parse(data[5]), int.Parse(data[6]));
-                                break;
-                            case "6":
-                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                                pers[2].pos = new Coor(int.Parse(data[1]), int.Parse(data[2]));
-                                pers[2].dir = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                pers[2].ini = new Coor(int.Parse(data[5]), int.Parse(data[6]));
-                                break;
-                            case "7":
-                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                                pers[3].pos = new Coor(int.Parse(data[1]), int.Parse(data[2]));
-                                pers[3].ini = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                pers[3].dir = new Coor(int.Parse(data[5]), int.Parse(data[6]));
-                                break;
-                            case "8":
-                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                                pers[4].pos = new Coor(int.Parse(data[1]), int.Parse(data[2]));
-                                pers[4].ini = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                pers[4].dir = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                break;
-                            case "9": //pacman
-                                cas[j, i] = Casilla.Libre;  ///Se podría cambiar también por comida
-                                pers[0].pos = new Coor(int.Parse(data[1]), int.Parse(data[2]));
-                                pers[0].dir = new Coor(int.Parse(data[3]), int.Parse(data[4]));
-                                break;
-                        }
-
-                    }
-
                 }
             }
             s.Close();
@@ -185,8 +143,12 @@ namespace Práctica_2
             {
                 for (int j = 0; j < cas.GetLength(0); j++)  //filas
                 {
-                    //Guardamos cada dato
-                    switch(cas[i,j])
+                    if (j == 27) 
+                    { 
+                        string t; 
+                    }
+                    //Si hay un personaje en la casilla guardamos el personaje
+                    if (PersonajeCasilla(i, j, out k))
                     {
                         string num = " ";
 
@@ -240,39 +202,7 @@ namespace Práctica_2
                 s.Write('\n');
             }
 
-            //Guardamos los personajes en líneas aparte para guardar todos los datos
-            for (int i = 0; i < pers.Length; i++)
-            {
-                switch (i)
-                {
-                    //Pacman
-                    case 0:
-                        s.Write("9 ");
-                        break;
-
-                    case 1:
-                        s.Write("5 ");
-                        break;
-
-                    case 2:
-                        s.Write("6 ");
-                        break;
-
-                    case 3:
-                        s.Write("7 ");
-                        break;
-                    case 4:
-                        s.Write("8 ");
-                        break;
-
-                }
-
-                s.Write(pers[i].pos.ToString());
-                s.Write(pers[i].ini.ToString());
-                s.Write(pers[i].dir.ToString());
-
-                s.Write('\n');
-            }
+            
 
             s.Close();
         }

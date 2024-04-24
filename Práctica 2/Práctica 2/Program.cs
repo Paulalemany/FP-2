@@ -112,16 +112,11 @@ namespace Práctica_2
 
         static void LevelMenu(out Tablero tab, int l)
         {
-            Console.WriteLine("Cargar partida [0] Cargar nivel {0} [1]", l);
+            Console.WriteLine("Nivel {0} [0] Cargar partida guardada [1]", l);
+            int decision = int.Parse(Console.ReadLine());
+            string file = " ";
 
-            int op = int.Parse(Console.ReadLine());
-            while (op != 0 && op != 1) 
-            {
-                Console.WriteLine("Opción no válida, introduzca una opción: ");
-                op = int.Parse(Console.ReadLine());
-            }
-
-            if (op == 1)
+            if (decision == 0)
             {
                 Console.WriteLine("Cargando nivel {0}", l);
                 string level = l.ToString();
@@ -129,17 +124,16 @@ namespace Práctica_2
                 //Añadimos el 0 si es necesario
                 if (level.Length < 2) level = "0" + level;
 
-                string file = "levels/level" + level + ".dat";
-
-                tab = new Tablero(file);
+                file = "levels/level" + level + ".dat";
             }
-            else
+            else if (decision == 1)
             {
-                Console.WriteLine("Cargando partida");
-
-                tab = new Tablero("partida.txt");
+                file = "partida.txt";
             }
+            
 
+            tab = new Tablero(file);
+            
             //retardo
             System.Threading.Thread.Sleep(2000);
         }
