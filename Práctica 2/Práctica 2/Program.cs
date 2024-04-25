@@ -35,14 +35,10 @@ namespace Práctica_2
                         {
                             //Menú de pausa
                             PauseMenu(tab, out exit);
+                            c = ' ';
 
                         }
-                        else
-                        {
-                            tab.CambiaDir(c);
-                        }
-
-                        c = ' ';
+                        else if (tab.CambiaDir(c)) c = ' ';
                     }
                     
                     tab.MuevePacman();
